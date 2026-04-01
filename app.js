@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 import config from "./config/config.js";
 import connectDB from "./db.js";
 import Product from "./models/Product.js";
@@ -9,7 +10,10 @@ connectDB();
 // Express 앱 생성
 const app = express();
 const PORT = config.server.port || 3000;
-
+const corsOptions = {
+  origin: ["http://localhost:5173"],
+};
+app.use(cors(corsOptions));
 app.use(express.json());
 
 const asyncHandler = (handler) => {
