@@ -3,9 +3,11 @@ const errorHandler = (err, req, res, next) => {
 
   // Prisma 에러 처리 (404)
   if (err.code === "P2025") {
+    const resource = req.resource || "리소스";
+
     return res.status(404).json({
       success: false,
-      error: "상품을 찾을 수 없습니다",
+      error: `${resource}을(를) 찾을 수 없습니다`,
     });
   }
 

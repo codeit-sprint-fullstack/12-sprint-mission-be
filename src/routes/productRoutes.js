@@ -1,7 +1,10 @@
 import express from "express";
+import setResource from "../middleware/setResource.js";
 import * as productController from "../controllers/productController.js";
 
 const router = express.Router();
+
+router.use(setResource("상품"));
 
 router.post("/", productController.createProduct);
 router.get("/:id", productController.getProduct);
