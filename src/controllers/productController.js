@@ -47,3 +47,33 @@ export const createProduct = asyncHandler(async (req, res) => {
   });
   res.status(201).json({ success: true, data: product });
 });
+
+export const getProduct = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  if (!/^[0-9a-fA-F]{24}$/.test(id)) {
+    const err = new Error("잘못된 ID 형식입니다");
+    err.status = 400;
+    throw err;
+  }
+
+  const product = await prisma.product.findUnique({
+    where: { id },
+    select: {
+      id: true,
+      name: true,
+      description: true,
+      price: true,
+      tags: true,
+      createdAt: true,
+    },
+  });
+
+  if (!product) {
+    const err = new Error("상품을 찾을 수 없습니다");
+    err.status = 404;
+    throw err;
+  }
+
+  res.json({ success: true, data: product });
+});
