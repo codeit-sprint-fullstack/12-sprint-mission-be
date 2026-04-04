@@ -129,3 +129,20 @@ export const updateProduct = asyncHandler(async (req, res) => {
   });
   res.json({ success: true, data: updated });
 });
+
+export const deleteProduct = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  // id 검증
+  if (!/^[0-9a-fA-F]{24}$/.test(id)) {
+    const err = new Error("잘못된 ID 형식입니다");
+    err.status = 400;
+    throw err;
+  }
+
+  await prisma.product.delete({
+    where: { id },
+  });
+
+  res.status(204).send();
+});
