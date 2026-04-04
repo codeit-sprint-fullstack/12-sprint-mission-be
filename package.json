@@ -1,0 +1,24 @@
+{
+  "name": "12-sprint-mission-be",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@prisma/client": "^6.19.3",
+    "cors": "^2.8.6",
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "dotenv": "^17.4.0",
+    "nodemon": "^3.1.14",
+    "prisma": "^6.19.3"
+  }
+}
