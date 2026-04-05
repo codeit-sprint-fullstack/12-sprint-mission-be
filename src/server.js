@@ -78,7 +78,6 @@ app.get("/products", async (req, res) => {
       skip: parseInt(offset),
       take: parseInt(limit),
       orderBy: { createdAt: "desc" },
-      select: { id: true, name: true, price: true, createdAt: true },
     });
     res.json(products);
   } catch (e) {
