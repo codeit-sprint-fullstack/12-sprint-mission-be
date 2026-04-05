@@ -66,8 +66,7 @@ exports.getProductList = async (req, res) => {
         }
       : {};
 
-    const products = await Product.find()
-      .find(filtered)
+    const products = await Product.find(filtered)
       .sort({ createdAt: -1 }) //createdAt를 기준으로 -1 내림차순 정렬
       .skip(Number(offset))
       .limit(Number(limit));
