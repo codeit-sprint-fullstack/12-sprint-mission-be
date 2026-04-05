@@ -6,7 +6,6 @@ const errorHandler = (err, req, res, next) => {
     const resource = req.resource || "리소스";
 
     return res.status(404).json({
-      success: false,
       error: `${resource}을(를) 찾을 수 없습니다`,
     });
   }
@@ -14,14 +13,12 @@ const errorHandler = (err, req, res, next) => {
   // 커스텀 에러
   if (err.status) {
     return res.status(err.status).json({
-      success: false,
       error: err.message,
     });
   }
 
   // 그 외 서버 에러
   res.status(500).json({
-    success: false,
     error: "서버에서 오류가 발생했습니다",
   });
 };

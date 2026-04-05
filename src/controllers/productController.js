@@ -37,7 +37,6 @@ export const getProducts = asyncHandler(async (req, res) => {
   ]);
 
   res.json({
-    success: true,
     data: products,
     meta: {
       totalCount,
@@ -62,13 +61,12 @@ export const createProduct = asyncHandler(async (req, res) => {
     throw err;
   }
 
-  // 형식 체크
   validateProductFields(req.body);
 
   const product = await prisma.product.create({
     data: { name, description, price, tags },
   });
-  res.status(201).json({ success: true, data: product });
+  res.status(201).json({ data: product });
 });
 
 export const getProduct = asyncHandler(async (req, res) => {
@@ -91,7 +89,7 @@ export const getProduct = asyncHandler(async (req, res) => {
     throw err;
   }
 
-  res.json({ success: true, data: product });
+  res.json({ data: product });
 });
 
 export const updateProduct = asyncHandler(async (req, res) => {
@@ -101,7 +99,7 @@ export const updateProduct = asyncHandler(async (req, res) => {
     where: { id: req.params.id },
     data: req.body,
   });
-  res.json({ success: true, data: updated });
+  res.json({ data: updated });
 });
 
 export const deleteProduct = asyncHandler(async (req, res) => {
