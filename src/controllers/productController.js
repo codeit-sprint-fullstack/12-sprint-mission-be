@@ -22,7 +22,13 @@ export const getProducts = asyncHandler(async (req, res) => {
   const [products, totalCount] = await Promise.all([
     prisma.product.findMany({
       where,
-      select: { id: true, name: true, price: true, createdAt: true },
+      select: {
+        id: true,
+        name: true,
+        price: true,
+        favoriteCount: true,
+        createdAt: true,
+      },
       orderBy: { createdAt: "desc" },
       skip: (Number(page) - 1) * Number(pageSize),
       take: Number(pageSize),
@@ -74,6 +80,7 @@ export const getProduct = asyncHandler(async (req, res) => {
       description: true,
       price: true,
       tags: true,
+      favoriteCount: true,
       createdAt: true,
     },
   });
