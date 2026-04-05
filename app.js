@@ -11,7 +11,10 @@ connectDB();
 const app = express();
 const PORT = config.server.port || 3000;
 const corsOptions = {
-  origin: ["http://localhost:5173"],
+  origin: [
+    "http://localhost:5173",
+    "https://one2-sprint-mission-be-zfc3.onrender.com",
+  ],
 };
 app.use(cors(corsOptions));
 app.use(express.json());
