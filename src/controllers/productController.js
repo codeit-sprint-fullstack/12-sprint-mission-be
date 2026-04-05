@@ -2,6 +2,44 @@ import prisma from "../lib/prisma.js";
 import asyncHandler from "../middleware/asyncHandler.js";
 import { validateProductFields } from "../utils/validate.js";
 
+export const getProducts = asyncHandler(async (req, res) => {
+  const {
+    page = 1,
+    pageSize = 10,
+    orderBy = "recent",
+    keyword = "",
+  } = req.query;
+
+  const where = keyword
+    ? {
+        OR: [
+          { name: { contains: keyword, mode: "insensitive" } },
+          { description: { contains: keyword, mode: "insensitive" } },
+        ],
+      }
+    : {};
+
+  const [products, totalCount] = await Promise.all([
+    prisma.product.findMany({
+      where,
+      select: { id: true, name: true, price: true, createdAt: true },
+      orderBy: { createdAt: "desc" },
+      skip: (Number(page) - 1) * Number(pageSize),
+      take: Number(pageSize),
+    }),
+    prisma.product.count({ where }),
+  ]);
+
+  res.json({
+    success: true,
+    data: products,
+    meta: {
+      totalCount,
+      totalPages: Math.ceil(totalCount / Number(pageSize)),
+    },
+  });
+});
+
 export const createProduct = asyncHandler(async (req, res) => {
   const { name, description, price, tags } = req.body;
 

@@ -7,6 +7,7 @@ const router = express.Router();
 
 router.use(setResource("상품"));
 
+router.get("/", productController.getProducts);
 router.post("/", productController.createProduct);
 router.get("/:id", validateObjectId, productController.getProduct);
 router.patch("/:id", validateObjectId, productController.updateProduct);
