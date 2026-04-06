@@ -94,4 +94,25 @@ router.patch("/:id", async (req, res) => {
   }
 });
 
+router.delete("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const product = await Product.findByIdAndDelete(id);
+
+    if (!product) {
+      return res.status(404).json({
+        message: "상품을 찾을 수 없습니다.",
+      });
+    }
+
+    res.status(200).json({ message: "상품 삭제에 성공했습니다." });
+  } catch (error) {
+    res.status(500).json({
+      message: "상품 수정에 실패했습니다.",
+      error: error.message,
+    });
+  }
+});
+
 export default router;
