@@ -22,6 +22,16 @@ model Product {
   favoriteCount Int      @default(0) @map("favorite_count")
   createdAt     DateTime @default(now()) @map("created_at")
   updatedAt     DateTime @updatedAt @map("updated_at")
-  
+
   @@map("products")
+}
+
+model Article {
+  id        Int      @id @default(autoincrement())
+  title        String
+  content String?
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  @@map("articles")
 }
