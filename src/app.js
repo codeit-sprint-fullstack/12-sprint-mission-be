@@ -1,11 +1,10 @@
 import express from "express";
+import productRouter from "./routes/productRouter.js";
+import cors from "cors";
 
-// Express 앱 생성
 const app = express();
-
-// 기본 라우트
-app.get("/", (req, res) => {
-  res.send("Hello Express!");
-});
+app.use(cors());
+app.use(express.json());
+app.use("/products", productRouter);
 
 export default app;
