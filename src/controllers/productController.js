@@ -70,7 +70,7 @@ export const createProduct = asyncHandler(async (req, res) => {
 });
 
 export const getProduct = asyncHandler(async (req, res) => {
-  const product = await prisma.product.findUnique({
+  const product = await prisma.product.findUniqueOrThrow({
     where: { id: req.params.id },
     select: {
       id: true,
@@ -82,12 +82,6 @@ export const getProduct = asyncHandler(async (req, res) => {
       createdAt: true,
     },
   });
-
-  if (!product) {
-    const err = new Error("상품을 찾을 수 없습니다");
-    err.status = 404;
-    throw err;
-  }
 
   res.json({ data: product });
 });
