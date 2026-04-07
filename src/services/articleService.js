@@ -24,3 +24,10 @@ export const getArticle = async (id) => {
     },
   });
 };
+
+export const updateArticle = async (id, fields) => {
+  return prisma.article.update({
+    where: { id },
+    data: fields,
+  });
+};

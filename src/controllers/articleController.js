@@ -10,3 +10,8 @@ export const getArticle = asyncHandler(async (req, res) => {
   const article = await articleService.getArticle(req.params.id);
   res.json({ data: article });
 });
+
+export const updateArticle = asyncHandler(async (req, res) => {
+  const article = await articleService.updateArticle(req.params.id, req.body);
+  res.json({ data: article });
+});
