@@ -1,6 +1,24 @@
 import asyncHandler from "../middleware/asyncHandler.js";
 import * as articleService from "../services/articleService.js";
 
+export const getArticles = asyncHandler(async (req, res) => {
+  const {
+    page = 1,
+    pageSize = 10,
+    orderBy = "recent",
+    keyword = "",
+  } = req.query;
+
+  const result = await articleService.getArticles({
+    page,
+    pageSize,
+    orderBy,
+    keyword,
+  });
+
+  res.json(result);
+});
+
 export const createArticle = asyncHandler(async (req, res) => {
   const article = await articleService.createArticle(req.body);
   res.status(201).json({ data: article });

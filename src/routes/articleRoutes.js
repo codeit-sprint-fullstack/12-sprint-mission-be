@@ -7,6 +7,7 @@ const router = express.Router();
 
 router.use(setResource("게시글"));
 
+router.get("/", articleController.getArticles);
 router.post("/", articleController.createArticle);
 router.get("/:id", validateId, articleController.getArticle);
 router.patch("/:id", validateId, articleController.updateArticle);
