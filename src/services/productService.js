@@ -11,6 +11,12 @@ export const getProducts = async ({ page, pageSize, orderBy, keyword }) => {
       }
     : {};
 
+  const orderMap = {
+    recent: { createdAt: "desc" },
+  };
+
+  const order = orderMap[orderBy] || { createdAt: "desc" };
+
   const [products, totalCount] = await Promise.all([
     prisma.product.findMany({
       where,
@@ -21,7 +27,7 @@ export const getProducts = async ({ page, pageSize, orderBy, keyword }) => {
         favoriteCount: true,
         createdAt: true,
       },
-      orderBy: { createdAt: "desc" },
+      orderBy: order,
       skip: (Number(page) - 1) * Number(pageSize),
       take: Number(pageSize),
     }),
