@@ -12,3 +12,15 @@ export const createArticle = async ({ title, content }) => {
     data: { title, content },
   });
 };
+
+export const getArticle = async (id) => {
+  return prisma.article.findUniqueOrThrow({
+    where: { id },
+    select: {
+      id: true,
+      title: true,
+      content: true,
+      createdAt: true,
+    },
+  });
+};

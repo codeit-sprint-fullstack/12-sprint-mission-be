@@ -8,5 +8,6 @@ const router = express.Router();
 router.use(setResource("게시글"));
 
 router.post("/", articleController.createArticle);
+router.get("/:id", validateId, articleController.getArticle);
 
 export default router;
