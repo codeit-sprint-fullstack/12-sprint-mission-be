@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import productsRouter from "./routes/productRoutes.js";
 import articlesRouter from "./routes/articleRoutes.js";
+import commentsRouter from "./routes/commentRoutes.js";
 import errorHandler from "./middleware/errorHandler.js";
 
 dotenv.config();
@@ -15,6 +16,7 @@ app.use(express.json());
 
 app.use("/products", productsRouter);
 app.use("/articles", articlesRouter);
+app.use("/comments", commentsRouter);
 
 app.use(errorHandler);
 
