@@ -11,8 +11,9 @@ async function seedArticles() {
     data: {
       title: "첫 번째 글",
       content: "내용입니다",
+      favoriteCount: 15,
       comments: {
-        create: [{ content: "댓글1" }, { content: "댓글2" }],
+        create: [{ content: "게시글 댓글1" }, { content: "게시글 댓글2" }],
       },
     },
   });
@@ -21,8 +22,9 @@ async function seedArticles() {
     data: {
       title: "두 번째 글",
       content: "내용입니다",
+      favoriteCount: 15,
       comments: {
-        create: [{ content: "댓글" }],
+        create: [{ content: "게시글 댓글" }],
       },
     },
   });
@@ -45,13 +47,20 @@ async function seedProducts() {
         tags: ["IT", "마우스"],
         favoriteCount: 8,
       },
-      {
-        name: "스탠리 텀블러",
-        description: "보냉 잘 됩니다",
-        price: 25000,
-        tags: ["스탠리", "친환경"],
-      },
     ],
+  });
+
+  await prisma.product.create({
+    data: {
+      name: "스탠리 텀블러",
+      description: "보냉 잘 됩니다",
+      price: 25000,
+      tags: ["스탠리", "친환경"],
+      favoriteCount: 8,
+      comments: {
+        create: [{ content: "상품 댓글1" }, { content: "상품 댓글2" }],
+      },
+    },
   });
 }
 
