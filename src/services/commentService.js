@@ -9,3 +9,9 @@ export const updateComment = async (id, fields) => {
     data: fields,
   });
 };
+
+export const deleteComment = async (id) => {
+  return prisma.comment.delete({
+    where: { id },
+  });
+};

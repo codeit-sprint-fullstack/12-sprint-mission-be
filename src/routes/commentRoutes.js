@@ -8,5 +8,6 @@ const router = express.Router();
 router.use(setResource("댓글"));
 
 router.patch("/:id", validateId, commentController.updateComment);
+router.delete("/:id", validateId, commentController.deleteComment);
 
 export default router;
