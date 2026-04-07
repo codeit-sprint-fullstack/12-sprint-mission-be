@@ -17,7 +17,7 @@ export const createArticle = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      list: newArticle,
+      data: newArticle,
     });
   } catch (error) {
     if (error.name === "ValidationError") {
@@ -67,7 +67,7 @@ export const getAllArticles = async (req, res) => {
       page,
       pageSize,
       orderBy,
-      list: articles,
+      data: articles,
       totalPages: Math.ceil(totalCount / pageSize),
       totalCount,
     });
