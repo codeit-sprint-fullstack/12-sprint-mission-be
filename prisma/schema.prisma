@@ -11,26 +11,42 @@ datasource db {
 
 // Product 스키마
 model Product {
-  id        Int      @id @default(autoincrement())
-  name      String
-  description String?
-  price Int
-  tags String[]
-  favoriteCount Int @default(0)
-  images String[] @default([])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id            Int       @id @default(autoincrement())
+  name          String
+  description   String?
+  price         Int
+  tags          String[]
+  favoriteCount Int       @default(0)
+  images        String[]  @default([])
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  comments      Comment[]
 
   @@map("products")
 }
 
 // Article 스키마
 model Article {
+  id        Int       @id @default(autoincrement())
+  title     String
+  content   String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  comments  Comment[]
+
+  @@map("articles")
+}
+
+// Comment 스키마
+model Comment {
   id        Int      @id @default(autoincrement())
-  title      String
-  content String
+  articleId Int?
+  article   Article?  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  productId Int?
+  product   Product?  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  content   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@map("articles")
+  @@map("comments")
 }

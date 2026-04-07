@@ -1,3 +1,4 @@
+// 상품 시드 데이터
 export const productSeedData = [
   {
     name: "무선 마우스",
@@ -101,6 +102,7 @@ export const productSeedData = [
   },
 ];
 
+// 게시글 시드 데이터
 export const articlesSeedData = [
   {
     title: "무선 마우스 당근했는데 이거 고질병인가요?",
@@ -171,5 +173,108 @@ export const articlesSeedData = [
       "분명 컴퓨터 연결하면 1TB로 뜨는데 파일 30기가 넣으니까 꽉 찼다고 에러 뜨네요... 분해해보니 안에 쇳덩이만 들어있습니다. 경찰서 갑니다.",
     createdAt: "2026-04-07T18:10:00.000Z",
     updatedAt: "2026-04-07T18:15:00.000Z",
+  },
+];
+
+// 댓글 시드 데이터
+export const commentsSeedData = [
+  /* --- 게시글(Article) 댓글 --- */
+  {
+    articleId: 1,
+    productId: null,
+    content:
+      "저도 같은 마우스 쓰는데 휠 찌그덕 소리 진짜 공감되네요... 교환 받으셨나요?",
+    createdAt: "2026-04-01T10:00:00.000Z",
+    updatedAt: "2026-04-01T10:00:00.000Z",
+  },
+  {
+    articleId: 1,
+    productId: null,
+    content:
+      "WD-40 플라스틱용 윤활제 아주 살짝 발라보세요! 저도 당근에서 샀다가 소리 나서 분해하고 윤활했더니 싹 사라졌습니다.",
+    createdAt: "2026-04-01T10:30:00.000Z",
+    updatedAt: "2026-04-01T10:30:00.000Z",
+  },
+  {
+    articleId: 1,
+    productId: null,
+    content:
+      "헐 저도 그거 사려다가 휠 소음 이슈 많다고 해서 접었는데... 판매자분도 알고서 모른 척 파신 거 아닐까요 ㅡㅡ",
+    createdAt: "2026-04-01T11:15:00.000Z",
+    updatedAt: "2026-04-01T11:15:00.000Z",
+  },
+  {
+    articleId: 4,
+    productId: null,
+    content:
+      "아이고ㅠㅠ 하수구라니 너무 마음 아프네요. 당근에 '오른쪽만' 키워드 알림 꼭 걸어두세요!",
+    createdAt: "2026-04-04T09:30:00.000Z",
+    updatedAt: "2026-04-04T09:30:00.000Z",
+  },
+  {
+    articleId: 6,
+    productId: null,
+    content:
+      "와... 4만원짜리를 1만원에 달라는 건 너무 양심 없네요. 그냥 무시가 답입니다.",
+    createdAt: "2026-04-06T14:15:00.000Z",
+    updatedAt: "2026-04-06T14:15:00.000Z",
+  },
+  {
+    articleId: 10,
+    productId: null,
+    content:
+      "와 쇳덩이 사기는 진짜 역대급이네요; 꼭 신고해서 돈 돌려받으시길 바랍니다.",
+    createdAt: "2026-04-07T18:40:00.000Z",
+    updatedAt: "2026-04-07T18:40:00.000Z",
+  },
+  {
+    articleId: 5,
+    productId: null,
+    content:
+      "나눔하는데 집 앞까지 배달해달라는 건 진짜 무슨 심보일까요? 고생 많으셨습니다.",
+    createdAt: "2026-04-05T12:00:00.000Z",
+    updatedAt: "2026-04-05T12:00:00.000Z",
+  },
+
+  /* --- 상품(Product) 댓글 및 리뷰 --- */
+  {
+    articleId: null,
+    productId: 1,
+    content:
+      "클릭 소음이 정말 작아서 사무실에서 쓰기 딱 좋습니다. 그립감도 훌륭해요!",
+    createdAt: "2026-04-02T15:00:00.000Z",
+    updatedAt: "2026-04-02T15:00:00.000Z",
+  },
+  {
+    articleId: null,
+    productId: 2,
+    content:
+      "적축이라 손가락에 부담이 덜 가고 소리도 도각도각 예쁘네요. 대만족입니다.",
+    createdAt: "2026-04-03T11:20:00.000Z",
+    updatedAt: "2026-04-03T11:20:00.000Z",
+  },
+  {
+    articleId: null,
+    productId: 3,
+    content:
+      "색감이 정말 정확해서 사진 보정 작업할 때 너무 편합니다. 베젤도 얇아서 예뻐요.",
+    createdAt: "2026-04-05T17:40:00.000Z",
+    updatedAt: "2026-04-05T17:40:00.000Z",
+  },
+  {
+    articleId: null,
+    productId: 8,
+    content:
+      "가죽 재질이 고급스럽고 마우스 패드 없이도 인식이 잘 돼서 책상이 깔끔해졌어요.",
+    createdAt: "2026-04-07T14:10:00.000Z",
+    updatedAt: "2026-04-07T14:10:00.000Z",
+  },
+  {
+    articleId: null,
+    productId: 10,
+    content:
+      "영상 편집용으로 샀는데 속도가 정말 빨라서 작업 시간이 많이 단축됐습니다. 가벼워서 휴대하기도 좋네요.",
+    createdAt: "2026-04-07T19:00:00.000Z",
+    updatedAt: "2026-04-07T19:00:00.000Z",
   },
 ];
