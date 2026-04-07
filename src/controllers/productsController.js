@@ -1,6 +1,6 @@
 import prisma from "../lib/prisma.js";
-import Product from "../models/Product.js";
 
+// 상품 목록 전체 조회
 export const getAllProducts = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
@@ -9,21 +9,6 @@ export const getAllProducts = async (req, res) => {
     const keyword = req.query.keyword || "";
 
     const skip = (page - 1) * pageSize;
-    // const queryOption = {};
-
-    // if (keyword) {
-    //   queryOption.$or = [
-    //     { name: { $regex: keyword, $options: "i" } },
-    //     { description: { $regex: keyword, $options: "i" } },
-    //   ];
-    // }
-
-    // const products = await Product.find(queryOption)
-    //   .sort(orderBy)
-    //   .limit(pageSize)
-    //   .skip(skip);
-
-    // const total = await Product.countDocuments();
 
     const [products, totalCount] = await Promise.all([
       prisma.product.findMany({
@@ -36,7 +21,7 @@ export const getAllProducts = async (req, res) => {
         skip,
         take: pageSize,
         orderBy: {
-          createdAt: "desc",
+          createdAt: orderBy,
         },
       }),
       prisma.product.count(),
@@ -67,12 +52,13 @@ export const getAllProducts = async (req, res) => {
   }
 };
 
+// 상품 상세 조회
 export const getProduct = async (req, res) => {
   try {
-    const id = req.params.id;
-    // const product = await Product.findById(id).select("-__v");
+    const id = parseInt(req.params.id);
+
     const product = await prisma.product.findUnique({
-      where: { id: parseInt(id) },
+      where: { id },
     });
 
     res.status(200).json({
@@ -95,9 +81,9 @@ export const getProduct = async (req, res) => {
   }
 };
 
+// 상품 생성
 export const createProduct = async (req, res) => {
   try {
-    // const product = await Product.create(req.body);
     const newProduct = await prisma.product.create({
       data: req.body,
     });
@@ -122,17 +108,13 @@ export const createProduct = async (req, res) => {
   }
 };
 
+// 상품 수정
 export const updateProduct = async (req, res) => {
   try {
-    const id = req.params.id;
-    // const product = await Product.findById(id);
+    const id = parseInt(req.params.id);
 
-    // Object.keys(req.body).forEach((key) => {
-    //   product[key] = req.body[key];
-    // });
-    // await product.save();
     const updatedProduct = await prisma.product.update({
-      where: { id: parseInt(id) },
+      where: { id },
       data: req.body,
     });
 
@@ -156,12 +138,13 @@ export const updateProduct = async (req, res) => {
   }
 };
 
+// 상품 삭제
 export const deleteProduct = async (req, res) => {
   try {
-    const id = req.params.id;
-    // const product = await Product.findByIdAndDelete(id);
+    const id = parseInt(req.params.id);
+
     const deletedProduct = await prisma.product.delete({
-      where: { id: parseInt(id) },
+      where: { id },
     });
 
     res.status(204).json({
