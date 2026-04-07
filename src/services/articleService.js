@@ -1,4 +1,5 @@
 import prisma from "../lib/prisma.js";
+import { validateArticleFields } from "../utils/validateArticle.js";
 
 export const createArticle = async ({ title, content }) => {
   // 필수값 체크
@@ -7,6 +8,8 @@ export const createArticle = async ({ title, content }) => {
     err.status = 400;
     throw err;
   }
+
+  validateArticleFields({ title, content });
 
   return prisma.article.create({
     data: { title, content },
@@ -26,6 +29,8 @@ export const getArticle = async (id) => {
 };
 
 export const updateArticle = async (id, fields) => {
+  validateProductFields(fields);
+
   return prisma.article.update({
     where: { id },
     data: fields,
