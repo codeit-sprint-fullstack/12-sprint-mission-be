@@ -36,3 +36,9 @@ export const updateArticle = async (id, fields) => {
     data: fields,
   });
 };
+
+export const deleteArticle = async (id) => {
+  return prisma.article.delete({
+    where: { id },
+  });
+};

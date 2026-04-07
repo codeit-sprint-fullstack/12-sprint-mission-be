@@ -10,5 +10,6 @@ router.use(setResource("게시글"));
 router.post("/", articleController.createArticle);
 router.get("/:id", validateId, articleController.getArticle);
 router.patch("/:id", validateId, articleController.updateArticle);
+router.delete("/:id", validateId, articleController.deleteArticle);
 
 export default router;
