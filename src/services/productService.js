@@ -1,5 +1,5 @@
 import prisma from "../lib/prisma.js";
-import { validateProductFields } from "../utils/validate.js";
+import { validateProductFields } from "../utils/validateProduct.js";
 
 export const getProducts = async ({ page, pageSize, orderBy, keyword }) => {
   const where = keyword
