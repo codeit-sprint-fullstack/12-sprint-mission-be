@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const requiredEnvVars = ["MONGODB_URI", "PORT"];
+const requiredEnvVars = ["DATABASE_URL", "PORT"];
 
 // 필수 환경 변수 확인
 requiredEnvVars.forEach((envVar) => {
@@ -16,8 +16,11 @@ const config = {
   mongodb: {
     uri: process.env.MONGODB_URI,
   },
+  postgresql: {
+    url: process.env.DATABASE_URL,
+  },
   server: {
-    port: parseInt(process.env.PORT) || 3000,
+    port: parseInt(process.env.PORT) || 8080,
     env: process.env.NODE_ENV || "development",
   },
 };
