@@ -1,5 +1,4 @@
-import { skip } from "@prisma/client/runtime/library";
-import prisma from "../lib/prisma";
+import prisma from "../lib/prisma.js";
 
 /* -------------------------
       게시글 댓글 API
@@ -9,7 +8,7 @@ import prisma from "../lib/prisma";
 export const createArticleComment = async (req, res) => {
   try {
     const { content } = req.body;
-    const id = parsInt(req.params.id);
+    const id = parseInt(req.params.id);
 
     if (!content || content === "") {
       throw new Error("댓글 내용을 입력해주세요");
@@ -43,9 +42,9 @@ export const createArticleComment = async (req, res) => {
 };
 
 // 게시글 댓글 목록 조회
-export const getArticleComments = async (req, res) => {
+export const getAllArticleComments = async (req, res) => {
   try {
-    const id = parsInt(req.params.id);
+    const id = parseInt(req.params.id);
     const cursorId = req.query.cursorId
       ? parseInt(req.query.cursorId)
       : undefined;
@@ -59,6 +58,12 @@ export const getArticleComments = async (req, res) => {
           cursor: { id: cursorId },
         }),
         where: { articleId: id },
+        select: {
+          id: true,
+          content: true,
+          createdAt: true,
+          updatedAt: true,
+        },
         orderBy: [{ createdAt: "desc" }, { id: "desc" }],
       }),
       prisma.comment.count({
@@ -98,7 +103,7 @@ export const getArticleComments = async (req, res) => {
 export const createProductComment = async (req, res) => {
   try {
     const { content } = req.body;
-    const id = parsInt(req.params.id);
+    const id = parseInt(req.params.id);
 
     if (!content || content === "") {
       throw new Error("댓글 내용을 입력해주세요");
@@ -132,9 +137,9 @@ export const createProductComment = async (req, res) => {
 };
 
 // 상품 댓글 목록 조회
-export const getProductComments = async (req, res) => {
+export const getAllProductComments = async (req, res) => {
   try {
-    const id = parsInt(req.params.id);
+    const id = parseInt(req.params.id);
     const cursorId = req.query.cursorId
       ? parseInt(req.query.cursorId)
       : undefined;
@@ -148,6 +153,12 @@ export const getProductComments = async (req, res) => {
           cursor: { id: cursorId },
         }),
         where: { productId: id },
+        select: {
+          id: true,
+          content: true,
+          createdAt: true,
+          updatedAt: true,
+        },
         orderBy: [{ createdAt: "desc" }, { id: "desc" }],
       }),
       prisma.comment.count({
@@ -188,7 +199,7 @@ export const getProductComments = async (req, res) => {
 export const updateComment = async (req, res) => {
   try {
     const { content } = req.body;
-    const id = parsInt(req.query.comment);
+    const id = parseInt(req.query.comment);
 
     if (!content || content === "") {
       throw new Error("댓글 내용을 입력해주세요");
@@ -228,7 +239,7 @@ export const updateComment = async (req, res) => {
 // 댓글 삭제
 export const deleteComment = async (req, res) => {
   try {
-    const id = parsInt(req.query.comment);
+    const id = parseInt(req.query.comment);
 
     const deletedComment = await prisma.comment.delete({
       where: { id },

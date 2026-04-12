@@ -1,4 +1,4 @@
-import prisma from "../lib/prisma";
+import prisma from "../lib/prisma.js";
 
 // 게시글 생성
 export const createArticle = async (req, res) => {
@@ -45,7 +45,7 @@ export const getAllArticles = async (req, res) => {
 
     const skip = (page - 1) * pageSize;
 
-    const [articles, totalCount] = await Promise.all([
+    const [articles, totalCount, comments] = await Promise.all([
       prisma.article.findMany({
         where: {
           OR: [
@@ -150,6 +150,7 @@ export const updateArticle = async (req, res) => {
 export const deleteArticle = async (req, res) => {
   try {
     const id = parseInt(req.params.id);
+
     const deletedArticle = await prisma.article.delete({
       where: { id },
     });
