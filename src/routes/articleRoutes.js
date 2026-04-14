@@ -14,6 +14,7 @@ router.get("/:id", validateId, articleController.getArticle);
 router.patch("/:id", validateId, articleController.updateArticle);
 router.delete("/:id", validateId, articleController.deleteArticle);
 
+router.get("/:id/comments", validateId, commentController.getArticleComments);
 router.post(
   "/:id/comments",
   validateId,

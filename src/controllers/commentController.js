@@ -1,6 +1,32 @@
 import asyncHandler from "../middleware/asyncHandler.js";
 import * as commentService from "../services/commentService.js";
 
+export const getArticleComments = asyncHandler(async (req, res) => {
+  const { cursor, take = 10 } = req.query;
+  const { articleId } = req.params;
+
+  const result = await commentService.getArticleComments({
+    articleId: Number(articleId),
+    cursor: cursor ? Number(cursor) : undefined,
+    take: Number(take),
+  });
+
+  res.json(result);
+});
+
+export const getProductComments = asyncHandler(async (req, res) => {
+  const { cursor, take = 10 } = req.query;
+  const { productId } = req.params;
+
+  const result = await commentService.getProductComments({
+    productId: Number(productId),
+    cursor: cursor ? Number(cursor) : undefined,
+    take: Number(take),
+  });
+
+  res.json(result);
+});
+
 export const createArticleComment = asyncHandler(async (req, res) => {
   const comment = await commentService.createCommentForArticle(
     req.params.id,

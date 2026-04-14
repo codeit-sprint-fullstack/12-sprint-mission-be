@@ -14,6 +14,7 @@ router.get("/:id", validateId, productController.getProduct);
 router.patch("/:id", validateId, productController.updateProduct);
 router.delete("/:id", validateId, productController.deleteProduct);
 
+router.get("/:id/comments", validateId, commentController.getProductComments);
 router.post(
   "/:id/comments",
   validateId,
