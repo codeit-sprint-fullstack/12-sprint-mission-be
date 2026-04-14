@@ -1,16 +1,15 @@
-
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "mongodb"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
+// 상품 글
 model Product {
-  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  id            Int      @id @default(autoincrement())
   name          String
   description   String?
   price         Int      @default(0)
@@ -19,4 +18,25 @@ model Product {
   favoriteCount Int      @default(0)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+}
+
+// 게시판 글
+model Article {
+  id        Int              @id @default(autoincrement())
+  title     String
+  content   String           @db.Text
+  image     String?
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+  comments  ArticleComment[]
+}
+
+// 게시판 댓글 onDelete: Cascade로 글이 지워지면 같이 지워지게 세팅함
+model ArticleComment {
+  id        Int      @id @default(autoincrement())
+  nickname  String   
+  content   String   
+  createdAt DateTime @default(now())
+  articleId Int
+  article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
 }
