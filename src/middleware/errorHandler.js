@@ -2,7 +2,9 @@ const errorHandler = (err, req, res, next) => {
   console.error(err);
 
   // Prisma 에러 처리 (404)
-  if (err.code === "P2025") {
+  // P2025: 레코드가 없음
+  // P2003: 존재하지 않는 외래 키 참조
+  if (err.code === "P2025" || err.code === "P2003") {
     const resource = req.resource || "리소스";
 
     return res.status(404).json({

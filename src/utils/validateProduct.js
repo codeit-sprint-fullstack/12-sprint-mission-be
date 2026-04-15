@@ -1,9 +1,9 @@
-// 상품 필드 검증
 export const validateProductFields = (fields) => {
   const { name, description, price, tags } = fields;
 
   if (name !== undefined) {
-    if (name.length < 1 || name.length > 10) {
+    const trimmed = name.trim();
+    if (trimmed.length === 0 || trimmed.length > 10) {
       const err = new Error("상품명은 1자 이상 10자 이내여야 합니다");
       err.status = 400;
       throw err;
@@ -11,7 +11,8 @@ export const validateProductFields = (fields) => {
   }
 
   if (description !== undefined) {
-    if (description.length < 10 || description.length > 100) {
+    const trimmed = description.trim();
+    if (trimmed.length < 10 || trimmed.length > 100) {
       const err = new Error("상품 소개는 10자 이상 100자 이내여야 합니다");
       err.status = 400;
       throw err;
