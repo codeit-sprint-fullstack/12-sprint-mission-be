@@ -11,14 +11,14 @@ import articlesRoutes from "./src/routes/articlesRoutes.js";
 // Express 앱 생성
 const app = express();
 const PORT = config.server.port || 8080;
-const corsOptions = {
-  origin: [
-    "http://localhost:5173",
-    "http://localhost:3000",
-    "https://one2-sprint-mission-be-zfc3.onrender.com",
-  ],
-};
-app.use(cors(corsOptions));
+// const corsOptions = {
+//   origin: [
+//     "http://localhost:5173",
+//     "http://localhost:3000",
+//     "https://one2-sprint-mission-be-zfc3.onrender.com",
+//   ],
+// };
+app.use(cors());
 app.use(express.json());
 
 // 상품 API
