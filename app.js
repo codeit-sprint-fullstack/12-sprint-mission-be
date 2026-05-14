@@ -14,6 +14,7 @@ const PORT = config.server.port || 8080;
 const corsOptions = {
   origin: [
     "http://localhost:5173",
+    "http://localhost:3000",
     "https://one2-sprint-mission-be-zfc3.onrender.com",
   ],
 };
