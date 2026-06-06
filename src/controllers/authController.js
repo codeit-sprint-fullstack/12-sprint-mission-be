@@ -74,7 +74,10 @@ authController.post("/logout", verifyRefreshToken, async (req, res, next) => {
 
 authController.get("/users/me", authenticateToken, async (req, res, next) => {
   try {
-    const user = await authService.getMe(req.auth.userId);
+    const user = await authService.getMe(req.userId);
+    if (!userId) {
+      return res.status(401).json({ message: "토큰에 유저 정보가 없습니다." });
+    }
 
     return res.status(200).json({ data: user });
   } catch (error) {
