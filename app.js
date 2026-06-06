@@ -5,6 +5,7 @@ import connectDB from "./db.js";
 import productsRoutes from "./src/routes/productsRoutes.js";
 import articlesRoutes from "./src/routes/articlesRoutes.js";
 import authController from "./src/controllers/authController.js";
+import cookieParser from "cookie-parser";
 
 // MongoDB 연결
 // connectDB();
@@ -21,6 +22,7 @@ const PORT = config.server.port || 8080;
 // };
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
 
 // 상품 API
 app.use("/api/products", productsRoutes);
