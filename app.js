@@ -4,6 +4,7 @@ import config from "./config/config.js";
 import connectDB from "./db.js";
 import productsRoutes from "./src/routes/productsRoutes.js";
 import articlesRoutes from "./src/routes/articlesRoutes.js";
+import authController from "./src/controllers/authController.js";
 
 // MongoDB 연결
 // connectDB();
@@ -25,6 +26,8 @@ app.use(express.json());
 app.use("/api/products", productsRoutes);
 // 게시글 API
 app.use("/api/articles", articlesRoutes);
+// 인증 API
+app.use("/api/auth", authController);
 
 // 서버 시작
 app.listen(PORT, () => {
