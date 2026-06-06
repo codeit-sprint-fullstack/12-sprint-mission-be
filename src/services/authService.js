@@ -28,7 +28,10 @@ const login = async (loginData) => {
     throw error;
   }
 
-  const isMatch = await comparePassword(loginData.password, user.password);
+  const isMatch = await comparePassword(
+    loginData.password,
+    user.encryptedPassword,
+  );
   if (!isMatch) {
     const error = new Error("이메일 또는 비밀번호가 올바르지 않습니다.");
     error.statusCode = 401;
