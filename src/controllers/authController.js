@@ -2,7 +2,11 @@ import express from "express";
 import { loginSchema, signupSchema } from "../schemas/auth.schema.js";
 import validate from "../middlewares/validate.js";
 import authService from "../services/authService.js";
-import { verifyAccessToken, verifyRefreshToken } from "../middlewares/auth.js";
+import {
+  authenticateToken,
+  verifyAccessToken,
+  verifyRefreshToken,
+} from "../middlewares/auth.js";
 
 const authController = express.Router();
 
@@ -63,6 +67,16 @@ authController.post("/logout", verifyRefreshToken, async (req, res, next) => {
       sameSite: "none",
     });
     return res.status(200).json({ message: "로그아웃 되었습니다." });
+  } catch (error) {
+    next(error);
+  }
+});
+
+authController.get("/users/me", authenticateToken, async (req, res, next) => {
+  try {
+    const user = await authService.getMe(req.auth.userId);
+
+    return res.status(200).json({ data: user });
   } catch (error) {
     next(error);
   }

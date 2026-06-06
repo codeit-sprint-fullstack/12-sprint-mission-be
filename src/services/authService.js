@@ -67,6 +67,19 @@ const logout = async (userId) => {
   await authRepository.updateUser(userId, { refreshToken: null });
 };
 
+const getMe = async (userId) => {
+  const user = await authRepository.findById(userId);
+
+  if (!user) {
+    throw new Error("유저를 찾을 수 없습니다.");
+  }
+
+  // 비밀번호 등 민감한 정보 제외
+  const { encryptedPassword, refreshToken, ...safeUserInfo } = user;
+
+  return safeUserInfo;
+};
+
 const hashPassword = async (password) => {
   return bcrypt.hash(password, 10);
 };
@@ -101,6 +114,7 @@ const authService = {
   login,
   refresh,
   logout,
+  getMe,
 };
 
 export default authService;
