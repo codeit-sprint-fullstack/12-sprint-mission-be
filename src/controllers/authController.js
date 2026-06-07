@@ -58,14 +58,11 @@ authController.post("/refresh", verifyRefreshToken, async (req, res, next) => {
   }
 });
 
-authController.post("/logout", verifyRefreshToken, async (req, res, next) => {
+authController.post("/logout", authenticateToken, async (req, res, next) => {
   try {
     await authService.logout(req.auth.userId);
-    res.clearCookie("refreshToken", {
-      httpOnly: true,
-      secure: false,
-      sameSite: "none",
-    });
+
+    res.clearCookie("refreshToken");
     return res.status(200).json({ message: "로그아웃 되었습니다." });
   } catch (error) {
     next(error);
@@ -74,8 +71,8 @@ authController.post("/logout", verifyRefreshToken, async (req, res, next) => {
 
 authController.get("/users/me", authenticateToken, async (req, res, next) => {
   try {
-    const user = await authService.getMe(req.userId);
-    if (!userId) {
+    const user = await authService.getMe(req.auth?.userId);
+    if (!user) {
       return res.status(401).json({ message: "토큰에 유저 정보가 없습니다." });
     }
 

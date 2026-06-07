@@ -24,7 +24,7 @@ export const authenticateToken = async (req, res, next) => {
       token,
       process.env.JWT_SECRET || "your-secret-key",
     );
-    req.userId = decoded.id;
+    req.auth = decoded;
 
     next();
   } catch (error) {
