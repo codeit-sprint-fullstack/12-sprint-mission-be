@@ -199,7 +199,8 @@ export const getAllProductComments = async (req, res) => {
 export const updateComment = async (req, res) => {
   try {
     const { content } = req.body;
-    const id = parseInt(req.query.comment);
+    // const id = parseInt(req.query.comment);
+    const id = parseInt(req.params.id);
 
     if (!content || content === "") {
       throw new Error("댓글 내용을 입력해주세요");
@@ -239,7 +240,8 @@ export const updateComment = async (req, res) => {
 // 댓글 삭제
 export const deleteComment = async (req, res) => {
   try {
-    const id = parseInt(req.query.comment);
+    // const id = parseInt(req.query.comment);
+    const id = parseInt(req.params.id);
 
     const deletedComment = await prisma.comment.delete({
       where: { id },

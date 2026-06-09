@@ -50,3 +50,17 @@ model Comment {
 
   @@map("comments")
 }
+
+// User 스키마
+model User {
+  id            Int       @id @default(autoincrement())
+  email         String    @unique
+  nickname      String
+  image         String[]  @default([])
+  encryptedPassword          String
+  refreshToken  String?   @map("refresh_token")
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@map("users")
+}
