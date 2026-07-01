@@ -27,7 +27,7 @@ async function seedArticles(user) {
     data: {
       title: "첫 번째 글",
       content: "내용입니다",
-      favoriteCount: 15,
+      favoriteCount: 0,
       authorId: user.id,
     },
   });
@@ -36,7 +36,7 @@ async function seedArticles(user) {
     data: {
       title: "두 번째 글",
       content: "내용입니다",
-      favoriteCount: 8,
+      favoriteCount: 0,
       authorId: user.id,
     },
   });
@@ -69,7 +69,7 @@ async function seedProducts(user) {
       description: "2세대라 노이즈 캔슬링이 훌륭합니다.",
       price: 329000,
       tags: ["전자제품", "에어팟", "애플"],
-      favoriteCount: 15,
+      favoriteCount: 0,
       authorId: user.id,
     },
   });
@@ -80,7 +80,7 @@ async function seedProducts(user) {
       description: "블루투스 마우스",
       price: 139000,
       tags: ["IT", "마우스"],
-      favoriteCount: 8,
+      favoriteCount: 0,
       authorId: user.id,
     },
   });
@@ -91,7 +91,7 @@ async function seedProducts(user) {
       description: "보냉 잘 됩니다",
       price: 25000,
       tags: ["스탠리", "친환경"],
-      favoriteCount: 8,
+      favoriteCount: 0,
       authorId: user.id,
     },
   });

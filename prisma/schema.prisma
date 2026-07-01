@@ -21,10 +21,14 @@ model Product {
   tags          String[]  @default([])
   favoriteCount Int      @default(0) @map("favorite_count")
   comments      Comment[]
-  createdAt     DateTime @default(now()) @map("created_at")
-  updatedAt     DateTime @updatedAt @map("updated_at")
+
   authorId Int    @map("author_id")
   author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  likes ProductLike[]
 
   @@map("products")
 }
@@ -35,10 +39,14 @@ model Article {
   content       String
   favoriteCount Int      @default(0) @map("favorite_count")
   comments      Comment[]
+
+  authorId Int    @map("author_id")
+  author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
   createdAt     DateTime @default(now()) @map("created_at")
   updatedAt     DateTime @updatedAt @map("updated_at")
-    authorId Int    @map("author_id")
-  author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  likes ArticleLike[]
 
   @@map("articles")
 }
@@ -48,10 +56,13 @@ model Comment {
   content   String
   articleId Int?     
   productId Int?     
+
   article   Article? @relation(fields: [articleId], references: [id], onDelete: Cascade)
   product   Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
+
   authorId Int    @map("author_id")
   author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
@@ -64,11 +75,39 @@ model User {
   nickname          String
   image             String?
   encryptedPassword String   @map("encrypted_password")
+
+  products      Product[]
+  articles      Article[]
+  comments      Comment[]
+  productLikes  ProductLike[]
+  articleLikes  ArticleLike[]
+
   createdAt         DateTime @default(now()) @map("created_at")
   updatedAt         DateTime @updatedAt @map("updated_at")
-  products Product[]
-  articles Article[]
-  comments Comment[]
 
   @@map("users")
+}
+
+model ProductLike {
+  userId    Int @map("user_id")
+  productId Int @map("product_id")
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@id([userId, productId])
+
+  @@map("product_likes")
+}
+
+model ArticleLike {
+  userId    Int @map("user_id")
+  articleId Int @map("article_id")
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  article Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
+
+  @@id([userId, articleId])
+
+  @@map("article_likes")
 }
