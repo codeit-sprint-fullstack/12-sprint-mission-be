@@ -10,5 +10,5 @@ export const signup = asyncHandler(async (req, res) => {
 export const login = asyncHandler(async (req, res) => {
   const result = await authService.login(req.body);
 
-  res.status.json({ data: result });
+  res.json({ data: result });
 });

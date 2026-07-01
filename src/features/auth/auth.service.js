@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import { signAccessToken } from "../../lib/jwt.js";
 import * as authRepository from "./auth.repository.js";
-import { validateSignup } from "./auth.validation.js";
+import { validateSignup, validateLogin } from "./auth.validation.js";
 
 export const signup = async ({ email, nickname, password }) => {
   validateSignup({ email, nickname, password });
@@ -32,7 +32,7 @@ export const signup = async ({ email, nickname, password }) => {
 export const login = async ({ email, password }) => {
   validateLogin({ email, password });
 
-  const user = await userRepository.findByEmail(email);
+  const user = await authRepository.findByEmail(email);
   if (!user) {
     const err = new Error("이메일 또는 비밀번호가 올바르지 않습니다");
     err.status = 401;
