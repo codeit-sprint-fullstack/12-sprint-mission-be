@@ -3,10 +3,10 @@ import * as commentService from "../services/commentService.js";
 
 export const getArticleComments = asyncHandler(async (req, res) => {
   const { cursor, take = 10 } = req.query;
-  const { articleId } = req.params;
+  const { id } = req.params;
 
   const result = await commentService.getArticleComments({
-    articleId: Number(articleId),
+    articleId: Number(id),
     cursor: cursor ? Number(cursor) : undefined,
     take: Number(take),
   });
@@ -16,10 +16,10 @@ export const getArticleComments = asyncHandler(async (req, res) => {
 
 export const getProductComments = asyncHandler(async (req, res) => {
   const { cursor, take = 10 } = req.query;
-  const { productId } = req.params;
+  const { id } = req.params;
 
   const result = await commentService.getProductComments({
-    productId: Number(productId),
+    productId: Number(id),
     cursor: cursor ? Number(cursor) : undefined,
     take: Number(take),
   });
