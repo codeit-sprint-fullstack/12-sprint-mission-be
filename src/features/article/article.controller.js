@@ -33,11 +33,15 @@ export const getArticle = asyncHandler(async (req, res) => {
 });
 
 export const updateArticle = asyncHandler(async (req, res) => {
-  const article = await articleService.updateArticle(req.params.id, req.body);
+  const article = await articleService.updateArticle(
+    req.params.id,
+    req.body,
+    req.user.id,
+  );
   res.json({ data: article });
 });
 
 export const deleteArticle = asyncHandler(async (req, res) => {
-  await articleService.deleteArticle(req.params.id);
+  await articleService.deleteArticle(req.params.id, req.user.id);
   res.status(204).send();
 });

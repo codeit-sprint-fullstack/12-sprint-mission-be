@@ -1,3 +1,4 @@
+import { validateAuthor } from "../../validations/authorization.validation.js";
 import * as articleRepository from "./article.repository.js";
 import { validateArticleFields } from "./article.validation.js";
 
@@ -50,12 +51,18 @@ export const getArticle = async (id) => {
   return articleRepository.findById(id);
 };
 
-export const updateArticle = async (id, fields) => {
+export const updateArticle = async (id, fields, userId) => {
   validateArticleFields(fields);
+
+  const article = await articleRepository.findById(id);
+  validateAuthor(article, userId);
 
   return articleRepository.update(id, fields);
 };
 
-export const deleteArticle = async (id) => {
+export const deleteArticle = async (id, userId) => {
+  const article = await articleRepository.findById(id);
+  validateAuthor(article, userId);
+
   return articleRepository.remove(id);
 };

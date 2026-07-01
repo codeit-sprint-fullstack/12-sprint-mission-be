@@ -37,6 +37,7 @@ export const findById = (id) => {
       id: true,
       title: true,
       content: true,
+      authorId: true,
       createdAt: true,
       updatedAt: true,
     },
