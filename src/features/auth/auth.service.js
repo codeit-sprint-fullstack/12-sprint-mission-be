@@ -13,12 +13,12 @@ export const signup = async ({ email, nickname, password }) => {
     throw err;
   }
 
-  const hashedPassword = await bcrypt.hash(password, 10);
+  const encryptedPassword = await bcrypt.hash(password, 10);
 
   const user = await authRepository.createUser({
     email,
     nickname,
-    password: hashedPassword,
+    encryptedPassword,
   });
 
   return {
@@ -30,7 +30,7 @@ export const signup = async ({ email, nickname, password }) => {
 };
 
 export const login = async ({ email, password }) => {
-  validateSignup({ email, password });
+  validateLogin({ email, password });
 
   const user = await userRepository.findByEmail(email);
   if (!user) {
@@ -39,7 +39,7 @@ export const login = async ({ email, password }) => {
     throw err;
   }
 
-  const isMatch = await bcrypt.compare(password, user.password);
+  const isMatch = await bcrypt.compare(password, user.encryptedPassword);
   if (!isMatch) {
     const err = new Error("이메일 또는 비밀번호가 올바르지 않습니다");
     err.status = 401;

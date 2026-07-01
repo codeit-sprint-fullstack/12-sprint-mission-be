@@ -1,12 +1,8 @@
 import prisma from "../../lib/prisma.js";
 
-export const createUser = ({ email, nickname, password }) => {
+export const createUser = (user) => {
   return prisma.user.create({
-    data: {
-      email,
-      nickname,
-      password,
-    },
+    data: user,
   });
 };
 
