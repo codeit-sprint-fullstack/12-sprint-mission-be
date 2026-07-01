@@ -6,6 +6,8 @@ import authRouter from "./features/auth/auth.route.js";
 import productsRouter from "./features/product/product.route.js";
 import articlesRouter from "./features/article/article.route.js";
 import commentsRouter from "./features/comment/comment.route.js";
+import usersRouter from "./features/user/user.route.js";
+
 import errorHandler from "./middleware/error-handler.middleware.js";
 
 dotenv.config();
@@ -27,6 +29,7 @@ app.use("/auth", authRouter);
 app.use("/products", productsRouter);
 app.use("/articles", articlesRouter);
 app.use("/comments", commentsRouter);
+app.use("/users", usersRouter);
 
 app.use(errorHandler);
 
