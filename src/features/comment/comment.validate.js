@@ -5,3 +5,12 @@ export const validateCommentFields = ({ content }) => {
     throw err;
   }
 };
+
+export const validateCommentTarget = ({ articleId, productId }) => {
+  const hasArticle = articleId != null;
+  const hasProduct = productId != null;
+
+  if (!articleId && !productId) {
+    throw new Error("댓글은 게시글 또는 상품 중 하나에만 작성할 수 있습니다.");
+  }
+};

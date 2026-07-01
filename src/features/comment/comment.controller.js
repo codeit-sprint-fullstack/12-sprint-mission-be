@@ -1,12 +1,15 @@
 import asyncHandler from "../../middleware/async-handler.middleware.js";
 import * as commentService from "./comment.service.js";
 
-export const getArticleComments = asyncHandler(async (req, res) => {
+export const getComments = asyncHandler(async (req, res) => {
   const { cursor, take = 10 } = req.query;
   const { id } = req.params;
 
-  const result = await commentService.getArticleComments({
-    articleId: Number(id),
+  const isArticle = req.baseUrl.includes("articles");
+
+  const result = await commentService.getComments({
+    articleId: isArticle ? Number(id) : null,
+    productId: !isArticle ? Number(id) : null,
     cursor: cursor ? Number(cursor) : undefined,
     take: Number(take),
   });
@@ -14,32 +17,18 @@ export const getArticleComments = asyncHandler(async (req, res) => {
   res.json(result);
 });
 
-export const getProductComments = asyncHandler(async (req, res) => {
-  const { cursor, take = 10 } = req.query;
+export const createComment = asyncHandler(async (req, res) => {
   const { id } = req.params;
+  const { content } = req.body;
 
-  const result = await commentService.getProductComments({
-    productId: Number(id),
-    cursor: cursor ? Number(cursor) : undefined,
-    take: Number(take),
+  const isArticle = req.baseUrl.includes("articles");
+
+  const comment = await commentService.createComment({
+    content,
+    articleId: isArticle ? Number(id) : null,
+    productId: !isArticle ? Number(id) : null,
   });
 
-  res.json(result);
-});
-
-export const createArticleComment = asyncHandler(async (req, res) => {
-  const comment = await commentService.createCommentForArticle(
-    req.params.id,
-    req.body,
-  );
-  res.status(201).json({ data: comment });
-});
-
-export const createProductComment = asyncHandler(async (req, res) => {
-  const comment = await commentService.createCommentForProduct(
-    req.params.id,
-    req.body,
-  );
   res.status(201).json({ data: comment });
 });
 

@@ -1,4 +1,4 @@
-import prisma from "../../lib/prisma.js";
+import * as articleRepository from "./article.repository.js";
 import { validateArticleFields } from "./article.validation.js";
 
 export const getArticles = async ({ page, pageSize, orderBy, keyword }) => {
@@ -18,20 +18,13 @@ export const getArticles = async ({ page, pageSize, orderBy, keyword }) => {
   const order = orderMap[orderBy] || { createdAt: "desc" };
 
   const [articles, totalCount] = await Promise.all([
-    prisma.article.findMany({
+    articleRepository.findMany({
       where,
-      select: {
-        id: true,
-        title: true,
-        content: true,
-        createdAt: true,
-        updatedAt: true,
-      },
       orderBy: order,
       skip: (Number(page) - 1) * Number(pageSize),
       take: Number(pageSize),
     }),
-    prisma.article.count({ where }),
+    articleRepository.count(where),
   ]);
 
   return {
@@ -46,35 +39,22 @@ export const getArticles = async ({ page, pageSize, orderBy, keyword }) => {
 export const createArticle = async ({ title, content }) => {
   validateArticleFields({ title, content });
 
-  return prisma.article.create({
-    data: { title, content },
+  return articleRepository.create({
+    title,
+    content,
   });
 };
 
 export const getArticle = async (id) => {
-  return prisma.article.findUniqueOrThrow({
-    where: { id },
-    select: {
-      id: true,
-      title: true,
-      content: true,
-      createdAt: true,
-      updatedAt: true,
-    },
-  });
+  return articleRepository.findById(id);
 };
 
 export const updateArticle = async (id, fields) => {
   validateArticleFields(fields);
 
-  return prisma.article.update({
-    where: { id },
-    data: fields,
-  });
+  return articleRepository.update(id, fields);
 };
 
 export const deleteArticle = async (id) => {
-  return prisma.article.delete({
-    where: { id },
-  });
+  return articleRepository.remove(id);
 };
