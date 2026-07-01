@@ -1,6 +1,6 @@
 import prisma from "../../lib/prisma.js";
 
-export const findMany = ({ page, pageSize, orderBy, keyword }) => {
+export const findMany = ({ where, orderBy, skip, take }) => {
   return prisma.product.findMany({
     where,
     select: {
@@ -12,16 +12,23 @@ export const findMany = ({ page, pageSize, orderBy, keyword }) => {
       updatedAt: true,
     },
     orderBy,
-    skip: (page - 1) * pageSize,
-    take: pageSize,
+    skip,
+    take,
   });
 };
 
-export const count = (where) => {
+export const count = ({ where }) => {
   return prisma.product.count({ where });
 };
 
-export const create = ({ name, description, price, tags, authorId }) => {
+export const create = ({
+  name,
+  description,
+  price,
+  tags,
+  authorId,
+  imageUrl,
+}) => {
   return prisma.product.create({
     data: {
       name,
@@ -29,6 +36,7 @@ export const create = ({ name, description, price, tags, authorId }) => {
       price,
       tags,
       authorId,
+      imageUrl,
     },
   });
 };

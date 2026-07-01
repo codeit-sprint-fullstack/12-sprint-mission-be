@@ -43,6 +43,7 @@ export const createProduct = async ({
   price,
   tags,
   authorId,
+  imageUrl,
 }) => {
   validateProductFields({ name, description, price, tags });
 
@@ -52,6 +53,7 @@ export const createProduct = async ({
     price,
     tags,
     authorId,
+    imageUrl,
   });
 };
 

@@ -1,3 +1,5 @@
+import multer from "multer";
+
 const errorHandler = (err, req, res, next) => {
   console.error(err);
 
@@ -17,6 +19,20 @@ const errorHandler = (err, req, res, next) => {
     return res.status(err.status).json({
       error: err.message,
     });
+  }
+
+  // 이미지 업로드 에러
+  if (err instanceof multer.MulterError) {
+    if (err.code === "LIMIT_FILE_SIZE") {
+      return res
+        .status(400)
+        .json({ error: "파일 크기는 5MB를 초과할 수 없습니다" });
+    }
+    return res.status(400).json({ error: err.message });
+  }
+
+  if (err.message === "이미지 파일만 업로드 가능합니다") {
+    return res.status(400).json({ error: err.message });
   }
 
   // 그 외 서버 에러

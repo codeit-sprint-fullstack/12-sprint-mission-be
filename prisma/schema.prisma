@@ -20,7 +20,7 @@ model Product {
   price         Float
   tags          String[]  @default([])
   favoriteCount Int      @default(0) @map("favorite_count")
-  comments      Comment[]
+  imageUrl      String?
 
   authorId Int    @map("author_id")
   author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
@@ -28,7 +28,8 @@ model Product {
   createdAt     DateTime @default(now()) @map("created_at")
   updatedAt     DateTime @updatedAt @map("updated_at")
 
-  likes ProductLike[]
+  comments      Comment[]
+  likes         ProductLike[]
 
   @@map("products")
 }
@@ -38,7 +39,6 @@ model Article {
   title         String
   content       String
   favoriteCount Int      @default(0) @map("favorite_count")
-  comments      Comment[]
 
   authorId Int    @map("author_id")
   author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
@@ -46,7 +46,8 @@ model Article {
   createdAt     DateTime @default(now()) @map("created_at")
   updatedAt     DateTime @updatedAt @map("updated_at")
 
-  likes ArticleLike[]
+  comments      Comment[]
+  likes         ArticleLike[]
 
   @@map("articles")
 }

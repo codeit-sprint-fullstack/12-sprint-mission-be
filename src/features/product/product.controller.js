@@ -25,10 +25,19 @@ export const getProduct = asyncHandler(async (req, res) => {
 });
 
 export const createProduct = asyncHandler(async (req, res) => {
+  const { name, description, price, tags } = req.body;
+
+  const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
+
   const product = await productService.createProduct({
-    ...req.body,
+    name,
+    description,
+    price: Number(price),
+    tags: tags ? JSON.parse(tags) : [],
     authorId: req.user.id,
+    imageUrl,
   });
+
   res.status(201).json({ data: product });
 });
 
