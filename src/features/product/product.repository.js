@@ -43,6 +43,7 @@ export const findById = (id) => {
       price: true,
       tags: true,
       favoriteCount: true,
+      authorId: true,
       createdAt: true,
       updatedAt: true,
     },

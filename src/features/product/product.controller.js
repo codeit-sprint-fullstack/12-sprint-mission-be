@@ -33,11 +33,15 @@ export const createProduct = asyncHandler(async (req, res) => {
 });
 
 export const updateProduct = asyncHandler(async (req, res) => {
-  const updated = await productService.updateProduct(req.params.id, req.body);
+  const updated = await productService.updateProduct(
+    req.params.id,
+    req.body,
+    req.user.id,
+  );
   res.json({ data: updated });
 });
 
 export const deleteProduct = asyncHandler(async (req, res) => {
-  await productService.deleteProduct(req.params.id);
+  await productService.deleteProduct(req.params.id, req.user.id);
   res.status(204).send();
 });

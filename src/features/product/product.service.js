@@ -1,3 +1,4 @@
+import { validateAuthor } from "../../validations/authorization.validation.js";
 import * as productRepository from "./product.repository.js";
 import { validateProductFields } from "./product.validate.js";
 
@@ -58,12 +59,18 @@ export const getProduct = async (id) => {
   return productRepository.findById(id);
 };
 
-export const updateProduct = async (id, fields) => {
+export const updateProduct = async (id, fields, userId) => {
   validateProductFields(fields);
+
+  const product = await productRepository.findById(id);
+  validateAuthor(product, userId);
 
   return productRepository.update(id, fields);
 };
 
-export const deleteProduct = async (id) => {
-  return productRepository.delete(id);
+export const deleteProduct = async (id, userId) => {
+  const product = await productRepository.findById(id);
+  validateAuthor(product, userId);
+
+  return productRepository.remove(id);
 };
