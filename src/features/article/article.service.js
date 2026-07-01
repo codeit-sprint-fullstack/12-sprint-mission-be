@@ -1,5 +1,5 @@
-import prisma from "../lib/prisma.js";
-import { validateArticleFields } from "../utils/validateArticle.js";
+import prisma from "../../lib/prisma.js";
+import { validateArticleFields } from "./article.validation.js";
 
 export const getArticles = async ({ page, pageSize, orderBy, keyword }) => {
   const where = keyword

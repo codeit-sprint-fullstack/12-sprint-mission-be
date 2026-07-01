@@ -1,5 +1,5 @@
-import prisma from "../lib/prisma.js";
-import { validateCommentFields } from "../utils/validateComment.js";
+import prisma from "../../lib/prisma.js";
+import { validateCommentFields } from "./comment.validate.js";
 
 export const getArticleComments = async ({ articleId, cursor, take }) => {
   const comments = await prisma.comment.findMany({

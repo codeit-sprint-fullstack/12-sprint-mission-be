@@ -1,5 +1,5 @@
-import asyncHandler from "../middleware/asyncHandler.js";
-import * as productService from "../services/productService.js";
+import asyncHandler from "../../middleware/async-handler.middleware.js";
+import * as productService from "./product.service.js";
 
 export const getProducts = asyncHandler(async (req, res) => {
   const {

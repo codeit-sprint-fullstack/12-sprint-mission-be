@@ -1,10 +1,10 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-import productsRouter from "./routes/productRoutes.js";
-import articlesRouter from "./routes/articleRoutes.js";
-import commentsRouter from "./routes/commentRoutes.js";
-import errorHandler from "./middleware/errorHandler.js";
+import productsRouter from "./features/product/product.route.js";
+import articlesRouter from "./features/article/article.route.js";
+import commentsRouter from "./features/comment/comment.route.js";
+import errorHandler from "./middleware/error-handler.middleware.js";
 
 dotenv.config();
 

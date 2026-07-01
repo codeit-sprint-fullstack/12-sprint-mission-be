@@ -1,5 +1,5 @@
-import asyncHandler from "../middleware/asyncHandler.js";
-import * as articleService from "../services/articleService.js";
+import asyncHandler from "../../middleware/async-handler.middleware.js";
+import * as articleService from "./article.service.js";
 
 export const getArticles = asyncHandler(async (req, res) => {
   const {

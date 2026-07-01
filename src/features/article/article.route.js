@@ -1,8 +1,8 @@
 import express from "express";
-import setResource from "../middleware/setResource.js";
-import validateId from "../middleware/validateId.js";
-import * as articleController from "../controllers/articleController.js";
-import * as commentController from "../controllers/commentController.js";
+import setResource from "../../middleware/resource.middleware.js";
+import validateId from "../../middleware/validate-id.middleware.js";
+import * as articleController from "./article.controller.js";
+import * as commentController from "../comment/comment.controller.js";
 
 const router = express.Router();
 

@@ -1,5 +1,5 @@
-import asyncHandler from "../middleware/asyncHandler.js";
-import * as commentService from "../services/commentService.js";
+import asyncHandler from "../../middleware/async-handler.middleware.js";
+import * as commentService from "./comment.service.js";
 
 export const getArticleComments = asyncHandler(async (req, res) => {
   const { cursor, take = 10 } = req.query;
