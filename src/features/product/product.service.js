@@ -43,10 +43,14 @@ export const createProduct = async ({
   tags,
   authorId,
 }) => {
-  validateProductFields({ name, description, price, tags, authorId });
+  validateProductFields({ name, description, price, tags });
 
   return productRepository.create({
-    data: { name, description, price, tags, authorId },
+    name,
+    description,
+    price,
+    tags,
+    authorId,
   });
 };
 

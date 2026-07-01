@@ -20,11 +20,12 @@ export const count = (where) => {
   return prisma.article.count({ where });
 };
 
-export const create = ({ title, content }) => {
+export const create = ({ title, content, authorId }) => {
   return prisma.article.create({
     data: {
       title,
       content,
+      authorId,
     },
   });
 };

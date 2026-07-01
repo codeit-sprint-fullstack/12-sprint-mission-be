@@ -20,7 +20,10 @@ export const getArticles = asyncHandler(async (req, res) => {
 });
 
 export const createArticle = asyncHandler(async (req, res) => {
-  const article = await articleService.createArticle(req.body);
+  const article = await articleService.createArticle({
+    ...req.body,
+    authorId: req.user.id,
+  });
   res.status(201).json({ data: article });
 });
 

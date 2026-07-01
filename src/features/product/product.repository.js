@@ -21,9 +21,15 @@ export const count = (where) => {
   return prisma.product.count({ where });
 };
 
-export const create = ({ data }) => {
+export const create = ({ name, description, price, tags, authorId }) => {
   return prisma.product.create({
-    data,
+    data: {
+      name,
+      description,
+      price,
+      tags,
+      authorId,
+    },
   });
 };
 

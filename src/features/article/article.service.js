@@ -36,12 +36,13 @@ export const getArticles = async ({ page, pageSize, orderBy, keyword }) => {
   };
 };
 
-export const createArticle = async ({ title, content }) => {
+export const createArticle = async ({ title, content, authorId }) => {
   validateArticleFields({ title, content });
 
   return articleRepository.create({
     title,
     content,
+    authorId,
   });
 };
 
