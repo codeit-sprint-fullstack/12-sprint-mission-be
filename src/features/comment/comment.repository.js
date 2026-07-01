@@ -28,6 +28,15 @@ export const create = ({ content, articleId, productId, authorId }) => {
   });
 };
 
+export const findById = (id) => {
+  return prisma.comment.findUniqueOrThrow({
+    where: { id },
+    select: {
+      authorId: true,
+    },
+  });
+};
+
 export const update = (id, data) => {
   return prisma.comment.update({
     where: { id },

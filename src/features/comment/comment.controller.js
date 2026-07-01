@@ -34,11 +34,15 @@ export const createComment = asyncHandler(async (req, res) => {
 });
 
 export const updateComment = asyncHandler(async (req, res) => {
-  const comment = await commentService.updateComment(req.params.id, req.body);
+  const comment = await commentService.updateComment(
+    req.params.id,
+    req.body,
+    req.user.id,
+  );
   res.json({ data: comment });
 });
 
 export const deleteComment = asyncHandler(async (req, res) => {
-  await commentService.deleteComment(req.params.id);
+  await commentService.deleteComment(req.params.id, req.user.id);
   res.status(204).send();
 });

@@ -1,6 +1,7 @@
+import { validateAuthor } from "../../validations/authorization.validation.js";
 import * as commentRepository from "./comment.repository.js";
 import {
-  validateCommentFields,
+  validateCommentContent,
   validateCommentTarget,
 } from "./comment.validate.js";
 
@@ -32,7 +33,7 @@ export const createComment = async ({
   productId,
   authorId,
 }) => {
-  validateCommentFields({ content });
+  validateCommentContent({ content });
   validateCommentTarget({ articleId, productId });
 
   return commentRepository.create({
@@ -43,12 +44,18 @@ export const createComment = async ({
   });
 };
 
-export const updateComment = async (id, fields) => {
-  validateCommentFields(fields);
+export const updateComment = async (id, content, userId) => {
+  validateCommentContent(content);
 
-  return commentRepository.update(id, fields);
+  const comment = await commentRepository.findById(id);
+  validateAuthor(comment, userId);
+
+  return commentRepository.update(id, content);
 };
 
-export const deleteComment = async (id) => {
+export const deleteComment = async (id, userId) => {
+  const comment = await commentRepository.findById(id);
+  validateAuthor(comment, userId);
+
   return commentRepository.remove(id);
 };
