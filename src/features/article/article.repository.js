@@ -30,18 +30,47 @@ export const create = ({ title, content, authorId }) => {
   });
 };
 
-export const findById = (id) => {
-  return prisma.article.findUniqueOrThrow({
+export const findById = async (id, options = {}) => {
+  const { userId, includeLike = false } = options;
+
+  const article = await prisma.article.findUnique({
     where: { id },
     select: {
       id: true,
       title: true,
       content: true,
+      favoriteCount: true,
       authorId: true,
       createdAt: true,
       updatedAt: true,
     },
   });
+
+  if (!article) {
+    return null;
+  }
+
+  // 좋아요 정보가 필요하지 않거나 비로그인 사용자라면 그냥 반환
+  if (!includeLike || !userId) {
+    return {
+      ...article,
+      liked: false,
+    };
+  }
+
+  const liked = await prisma.ArticleLike.findUnique({
+    where: {
+      userId_articleId: {
+        userId,
+        articleId: article.id,
+      },
+    },
+  });
+
+  return {
+    ...article,
+    isLiked: !!liked,
+  };
 };
 
 export const update = (id, data) => {

@@ -20,7 +20,7 @@ export const getProducts = asyncHandler(async (req, res) => {
 });
 
 export const getProduct = asyncHandler(async (req, res) => {
-  const product = await productService.getProduct(req.params.id);
+  const product = await productService.getProduct(req.params.id, req.user.id);
   res.json({ data: product });
 });
 

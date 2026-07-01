@@ -55,8 +55,11 @@ export const createProduct = async ({
   });
 };
 
-export const getProduct = async (id) => {
-  return productRepository.findById(id);
+export const getProduct = async (id, userId) => {
+  return productRepository.findById(id, {
+    userId,
+    includeLike: true,
+  });
 };
 
 export const updateProduct = async (id, fields, userId) => {

@@ -28,7 +28,7 @@ export const createArticle = asyncHandler(async (req, res) => {
 });
 
 export const getArticle = asyncHandler(async (req, res) => {
-  const article = await articleService.getArticle(req.params.id);
+  const article = await articleService.getArticle(req.params.id, req.user.id);
   res.json({ data: article });
 });
 

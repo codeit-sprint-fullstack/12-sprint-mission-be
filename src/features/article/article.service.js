@@ -47,8 +47,11 @@ export const createArticle = async ({ title, content, authorId }) => {
   });
 };
 
-export const getArticle = async (id) => {
-  return articleRepository.findById(id);
+export const getArticle = async (id, userId) => {
+  return articleRepository.findById(id, {
+    userId,
+    includeLike: true,
+  });
 };
 
 export const updateArticle = async (id, fields, userId) => {

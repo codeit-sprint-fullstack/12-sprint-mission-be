@@ -12,7 +12,7 @@ router.use(setResource("게시글"));
 
 router.get("/", articleController.getArticles);
 router.post("/", requireAuth, articleController.createArticle);
-router.get("/:id", validateId, articleController.getArticle);
+router.get("/:id", validateId, requireAuth, articleController.getArticle);
 router.patch("/:id", validateId, requireAuth, articleController.updateArticle);
 router.delete("/:id", validateId, requireAuth, articleController.deleteArticle);
 

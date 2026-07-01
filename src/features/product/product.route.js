@@ -12,7 +12,7 @@ router.use(setResource("상품"));
 
 router.get("/", productController.getProducts);
 router.post("/", requireAuth, productController.createProduct);
-router.get("/:id", validateId, productController.getProduct);
+router.get("/:id", validateId, requireAuth, productController.getProduct);
 router.patch("/:id", validateId, requireAuth, productController.updateProduct);
 router.delete("/:id", validateId, requireAuth, productController.deleteProduct);
 
