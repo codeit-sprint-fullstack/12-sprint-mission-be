@@ -43,13 +43,6 @@ export const getArticles = async ({ page, pageSize, orderBy, keyword }) => {
 };
 
 export const createArticle = async ({ title, content }) => {
-  // 필수값 체크
-  if (!title || !content) {
-    const err = new Error("제목과 내용은 필수입니다");
-    err.status = 400;
-    throw err;
-  }
-
   validateArticleFields({ title, content });
 
   return prisma.article.create({
@@ -70,7 +63,7 @@ export const getArticle = async (id) => {
 };
 
 export const updateArticle = async (id, fields) => {
-  validateProductFields(fields);
+  validateArticleFields(fields);
 
   return prisma.article.update({
     where: { id },
