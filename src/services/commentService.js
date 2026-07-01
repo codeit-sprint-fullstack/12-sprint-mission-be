@@ -70,13 +70,6 @@ export const getProductComments = async ({ productId, cursor, take }) => {
 };
 
 export const createCommentForArticle = async (articleId, { content }) => {
-  // 필수값 체크
-  if (!content) {
-    const err = new Error("댓글 내용은 필수입니다");
-    err.status = 400;
-    throw err;
-  }
-
   validateCommentFields({ content });
 
   return prisma.comment.create({
@@ -85,13 +78,6 @@ export const createCommentForArticle = async (articleId, { content }) => {
 };
 
 export const createCommentForProduct = async (productId, { content }) => {
-  // 필수값 체크
-  if (!content) {
-    const err = new Error("댓글 내용은 필수입니다");
-    err.status = 400;
-    throw err;
-  }
-
   validateCommentFields({ content });
 
   return prisma.comment.create({
