@@ -8,3 +8,11 @@ export const addFavorite = async ({ articleId, productId, userId }) => {
     userId,
   });
 };
+
+export const removeFavorite = async ({ articleId, productId, userId }) => {
+  return favoriteRepository.removeFavorite({
+    articleId,
+    productId,
+    userId,
+  });
+};

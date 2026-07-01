@@ -14,3 +14,17 @@ export const addFavorite = asyncHandler(async (req, res) => {
 
   res.status(201).json({ data: favorite });
 });
+
+export const removeFavorite = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  const isArticle = req.baseUrl.includes("articles");
+
+  await favoriteService.removeFavorite({
+    articleId: isArticle ? Number(id) : null,
+    productId: !isArticle ? Number(id) : null,
+    userId: req.user.id,
+  });
+
+  res.status(204).send();
+});
