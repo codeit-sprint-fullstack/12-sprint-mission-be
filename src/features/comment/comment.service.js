@@ -26,7 +26,12 @@ export const getComments = async ({ articleId, productId, cursor, take }) => {
   };
 };
 
-export const createComment = async ({ content, articleId, productId }) => {
+export const createComment = async ({
+  content,
+  articleId,
+  productId,
+  authorId,
+}) => {
   validateCommentFields({ content });
   validateCommentTarget({ articleId, productId });
 
@@ -34,6 +39,7 @@ export const createComment = async ({ content, articleId, productId }) => {
     content,
     articleId,
     productId,
+    authorId,
   });
 };
 

@@ -27,6 +27,7 @@ export const createComment = asyncHandler(async (req, res) => {
     content,
     articleId: isArticle ? Number(id) : null,
     productId: !isArticle ? Number(id) : null,
+    authorId: req.user.id,
   });
 
   res.status(201).json({ data: comment });

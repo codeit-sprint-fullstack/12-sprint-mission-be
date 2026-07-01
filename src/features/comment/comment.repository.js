@@ -17,12 +17,13 @@ export const findMany = ({ articleId, productId, cursor, take }) => {
   });
 };
 
-export const create = ({ content, articleId, productId }) => {
+export const create = ({ content, articleId, productId, authorId }) => {
   return prisma.comment.create({
     data: {
       content,
       articleId,
       productId,
+      authorId,
     },
   });
 };
