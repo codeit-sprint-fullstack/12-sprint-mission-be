@@ -44,19 +44,6 @@ export const getProducts = async ({ page, pageSize, orderBy, keyword }) => {
 };
 
 export const createProduct = async ({ name, description, price, tags }) => {
-  // 필수값 체크
-  if (
-    !name ||
-    !description ||
-    price === undefined ||
-    !Array.isArray(tags) ||
-    tags.length === 0
-  ) {
-    const err = new Error("상품명, 상품 소개, 판매가격, 태그는 필수입니다");
-    err.status = 400;
-    throw err;
-  }
-
   validateProductFields({ name, description, price, tags });
 
   return prisma.product.create({
