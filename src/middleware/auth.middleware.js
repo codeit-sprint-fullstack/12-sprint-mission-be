@@ -1,18 +1,10 @@
 import { verifyAccessToken } from "../lib/jwt.js";
 
 const requireAuth = (req, res, next) => {
-  const authorization = req.headers.authorization;
+  const token = req.cookies.accessToken;
 
-  if (!authorization) {
+  if (!token) {
     const err = new Error("로그인이 필요합니다");
-    err.status = 401;
-    return next(err);
-  }
-
-  const [scheme, token] = authorization.split(" ");
-
-  if (scheme !== "Bearer" || !token) {
-    const err = new Error("유효하지 않은 인증 형식입니다");
     err.status = 401;
     return next(err);
   }

@@ -1,5 +1,9 @@
 import bcrypt from "bcrypt";
-import { signAccessToken } from "../../lib/jwt.js";
+import {
+  signAccessToken,
+  signRefreshToken,
+  verifyRefreshToken,
+} from "../../lib/jwt.js";
 import * as authRepository from "./auth.repository.js";
 import { validateSignup, validateLogin } from "./auth.validation.js";
 
@@ -51,6 +55,10 @@ export const login = async ({ email, password }) => {
     email: user.email,
   });
 
+  const refreshToken = signRefreshToken({ userId: user.id });
+
+  await authRepository.saveRefreshToken(user.id, refreshToken);
+
   return {
     user: {
       id: user.id,
@@ -58,5 +66,43 @@ export const login = async ({ email, password }) => {
       nickname: user.nickname,
     },
     accessToken,
+    refreshToken,
   };
+};
+
+export const refresh = async (refreshToken) => {
+  if (!refreshToken) {
+    const err = new Error("리프레시 토큰이 없습니다");
+    err.status = 401;
+    throw err;
+  }
+
+  let payload;
+  try {
+    payload = verifyRefreshToken(refreshToken);
+  } catch {
+    const err = new Error("유효하지 않거나 만료된 리프레시 토큰입니다");
+    err.status = 401;
+    throw err;
+  }
+
+  const user = await authRepository.findById(payload.userId);
+
+  // DB에 저장된 토큰과 일치하는지 확인 (탈취/재사용 방지)
+  if (!user || user.refreshToken !== refreshToken) {
+    const err = new Error("유효하지 않은 리프레시 토큰입니다");
+    err.status = 401;
+    throw err;
+  }
+
+  const newAccessToken = signAccessToken({
+    userId: user.id,
+    email: user.email,
+  });
+
+  return { accessToken: newAccessToken };
+};
+
+export const logout = async (userId) => {
+  await authRepository.clearRefreshToken(userId);
 };

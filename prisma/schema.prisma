@@ -76,6 +76,7 @@ model User {
   nickname          String
   image             String?
   encryptedPassword String   @map("encrypted_password")
+  refreshToken      String?  @map("refresh_token")
 
   products      Product[]
   articles      Article[]
