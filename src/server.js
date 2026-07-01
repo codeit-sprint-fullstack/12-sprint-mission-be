@@ -17,6 +17,7 @@ app.use(express.json());
 app.use("/products", productsRouter);
 app.use("/articles", articlesRouter);
 app.use("/comments", commentsRouter);
+app.use("/auth", authRouter);
 
 app.use(errorHandler);
 

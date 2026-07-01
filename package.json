@@ -21,6 +21,7 @@
   "homepage": "https://github.com/yooseohyeon/12-sprint-mission-be#readme",
   "dependencies": {
     "@prisma/client": "^6.19.3",
+    "bcrypt": "^6.0.0",
     "cors": "^2.8.6",
     "dotenv": "^17.4.0",
     "express": "^5.2.1"
