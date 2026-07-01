@@ -4,6 +4,7 @@ import validateId from "../../middleware/validate-id.middleware.js";
 import requireAuth from "../../middleware/auth.middleware.js";
 import * as productController from "./product.controller.js";
 import * as commentController from "../comment/comment.controller.js";
+import * as favoriteController from "../favorite/favorite.controller.js";
 
 const router = express.Router();
 
@@ -21,6 +22,13 @@ router.post(
   validateId,
   requireAuth,
   commentController.createComment,
+);
+
+router.post(
+  "/:id/favorite",
+  validateId,
+  requireAuth,
+  favoriteController.addFavorite,
 );
 
 export default router;
