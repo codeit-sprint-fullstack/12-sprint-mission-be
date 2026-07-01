@@ -25,6 +25,7 @@ export const getArticles = async ({ page, pageSize, orderBy, keyword }) => {
         title: true,
         content: true,
         createdAt: true,
+        updatedAt: true,
       },
       orderBy: order,
       skip: (Number(page) - 1) * Number(pageSize),
@@ -58,6 +59,7 @@ export const getArticle = async (id) => {
       title: true,
       content: true,
       createdAt: true,
+      updatedAt: true,
     },
   });
 };

@@ -26,6 +26,7 @@ export const getProducts = async ({ page, pageSize, orderBy, keyword }) => {
         price: true,
         favoriteCount: true,
         createdAt: true,
+        updatedAt: true,
       },
       orderBy: order,
       skip: (Number(page) - 1) * Number(pageSize),
@@ -62,6 +63,7 @@ export const getProduct = async (id) => {
       tags: true,
       favoriteCount: true,
       createdAt: true,
+      updatedAt: true,
     },
   });
 };
