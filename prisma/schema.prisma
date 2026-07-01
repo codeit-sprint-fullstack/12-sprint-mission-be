@@ -23,6 +23,8 @@ model Product {
   comments      Comment[]
   createdAt     DateTime @default(now()) @map("created_at")
   updatedAt     DateTime @updatedAt @map("updated_at")
+  authorId Int    @map("author_id")
+  author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
 
   @@map("products")
 }
@@ -35,6 +37,8 @@ model Article {
   comments      Comment[]
   createdAt     DateTime @default(now()) @map("created_at")
   updatedAt     DateTime @updatedAt @map("updated_at")
+    authorId Int    @map("author_id")
+  author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
 
   @@map("articles")
 }
@@ -46,6 +50,8 @@ model Comment {
   productId Int?     
   article   Article? @relation(fields: [articleId], references: [id], onDelete: Cascade)
   product   Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
+  authorId Int    @map("author_id")
+  author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
@@ -60,6 +66,9 @@ model User {
   encryptedPassword String   @map("encrypted_password")
   createdAt         DateTime @default(now()) @map("created_at")
   updatedAt         DateTime @updatedAt @map("updated_at")
+  products Product[]
+  articles Article[]
+  comments Comment[]
 
   @@map("users")
 }
