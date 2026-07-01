@@ -25,7 +25,7 @@ export const getArticles = async ({ page, pageSize, orderBy, keyword }) => {
       skip: (Number(page) - 1) * Number(pageSize),
       take: Number(pageSize),
     }),
-    articleRepository.count(where),
+    articleRepository.count({ where }),
   ]);
 
   return {
@@ -38,7 +38,7 @@ export const getArticles = async ({ page, pageSize, orderBy, keyword }) => {
 };
 
 export const createArticle = async ({ title, content, authorId }) => {
-  validateArticleFields({ title, content });
+  validateArticleFields({ title, content }, { isCreate: true });
 
   return articleRepository.create({
     title,

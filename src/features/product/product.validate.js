@@ -1,5 +1,19 @@
-export const validateProductFields = (fields) => {
+export const validateProductFields = (fields, { isCreate = false } = {}) => {
   const { name, description, price, tags } = fields;
+
+  if (
+    isCreate &&
+    (name === undefined ||
+      description === undefined ||
+      price === undefined ||
+      tags === undefined)
+  ) {
+    const err = new Error(
+      "상품명, 상품 소개, 판매가격, 태그는 필수 입력값입니다",
+    );
+    err.status = 400;
+    throw err;
+  }
 
   if (name !== undefined) {
     const trimmed = name.trim();

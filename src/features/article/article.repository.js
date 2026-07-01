@@ -16,7 +16,7 @@ export const findMany = ({ where, orderBy, skip, take }) => {
   });
 };
 
-export const count = (where) => {
+export const count = ({ where }) => {
   return prisma.article.count({ where });
 };
 

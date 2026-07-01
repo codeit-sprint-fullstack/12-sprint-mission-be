@@ -1,5 +1,11 @@
-export const validateArticleFields = (fields) => {
+export const validateArticleFields = (fields, { isCreate = false } = {}) => {
   const { title, content } = fields;
+
+  if (isCreate && (title === undefined || content === undefined)) {
+    const err = new Error("제목과 내용은 필수 입력값입니다");
+    err.status = 400;
+    throw err;
+  }
 
   if (title !== undefined) {
     const trimmed = title.trim();
