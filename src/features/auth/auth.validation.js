@@ -11,3 +11,11 @@ export const validateSignup = ({ email, nickname, password }) => {
     throw err;
   }
 };
+
+export const validateLogin = ({ email, password }) => {
+  if (!email || !password) {
+    const err = new Error("이메일과 비밀번호는 필수입니다");
+    err.status = 400;
+    throw err;
+  }
+};

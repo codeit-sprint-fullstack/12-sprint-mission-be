@@ -24,7 +24,8 @@
     "bcrypt": "^6.0.0",
     "cors": "^2.8.6",
     "dotenv": "^17.4.0",
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3"
   },
   "devDependencies": {
     "install": "^0.13.0",

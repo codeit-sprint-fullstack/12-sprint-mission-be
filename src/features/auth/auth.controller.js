@@ -6,3 +6,9 @@ export const signup = asyncHandler(async (req, res) => {
 
   res.status(201).json({ data: user });
 });
+
+export const login = asyncHandler(async (req, res) => {
+  const result = await userService.login(req.body);
+
+  res.status(201).json({ data: result });
+});
