@@ -25,7 +25,10 @@ export const getProduct = asyncHandler(async (req, res) => {
 });
 
 export const createProduct = asyncHandler(async (req, res) => {
-  const product = await productService.createProduct(req.body);
+  const product = await productService.createProduct({
+    ...req.body,
+    authorId: req.user.id,
+  });
   res.status(201).json({ data: product });
 });
 

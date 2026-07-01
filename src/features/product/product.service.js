@@ -36,11 +36,17 @@ export const getProducts = async ({ page, pageSize, orderBy, keyword }) => {
   };
 };
 
-export const createProduct = async ({ name, description, price, tags }) => {
-  validateProductFields({ name, description, price, tags });
+export const createProduct = async ({
+  name,
+  description,
+  price,
+  tags,
+  authorId,
+}) => {
+  validateProductFields({ name, description, price, tags, authorId });
 
   return productRepository.create({
-    data: { name, description, price, tags },
+    data: { name, description, price, tags, authorId },
   });
 };
 
