@@ -1,12 +1,24 @@
 import prisma from "../../lib/prisma.js";
 
-export const findMany = ({ where, orderBy, skip, take }) => {
-  return prisma.article.findMany({
+const flattenAuthor = ({ author, ...rest }) => ({
+  ...rest,
+  authorNickname: author.nickname,
+});
+
+export const findMany = async ({ where, orderBy, skip, take }) => {
+  const articles = await prisma.article.findMany({
     where,
     select: {
       id: true,
       title: true,
       content: true,
+      favoriteCount: true,
+      authorId: true,
+      author: {
+        select: {
+          nickname: true,
+        },
+      },
       createdAt: true,
       updatedAt: true,
     },
@@ -14,6 +26,8 @@ export const findMany = ({ where, orderBy, skip, take }) => {
     skip,
     take,
   });
+
+  return articles.map(flattenAuthor);
 };
 
 export const count = ({ where }) => {
@@ -41,6 +55,11 @@ export const findById = async (id, options = {}) => {
       content: true,
       favoriteCount: true,
       authorId: true,
+      author: {
+        select: {
+          nickname: true,
+        },
+      },
       createdAt: true,
       updatedAt: true,
     },
@@ -50,10 +69,12 @@ export const findById = async (id, options = {}) => {
     return null;
   }
 
+  const flat = flattenAuthor(article);
+
   // 좋아요 정보가 필요하지 않거나 비로그인 사용자라면 그냥 반환
   if (!includeLike || !userId) {
     return {
-      ...article,
+      ...flat,
       isLiked: false,
     };
   }
@@ -68,7 +89,7 @@ export const findById = async (id, options = {}) => {
   });
 
   return {
-    ...article,
+    ...flat,
     isLiked: !!isLiked,
   };
 };
