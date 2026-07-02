@@ -60,7 +60,7 @@ export const updateArticle = async (id, fields, userId) => {
   const article = await articleRepository.findById(id);
   validateAuthor(article, userId);
 
-  return articleRepository.update(id, fields);
+  return articleRepository.update(id, fields, userId);
 };
 
 export const deleteArticle = async (id, userId) => {

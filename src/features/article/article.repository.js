@@ -1,27 +1,46 @@
 import prisma from "../../lib/prisma.js";
 
+const ARTICLE_SELECT = {
+  id: true,
+  title: true,
+  content: true,
+  favoriteCount: true,
+  authorId: true,
+  author: {
+    select: {
+      nickname: true,
+    },
+  },
+  createdAt: true,
+  updatedAt: true,
+};
+
 const flattenAuthor = ({ author, ...rest }) => ({
   ...rest,
   authorNickname: author.nickname,
 });
 
+const getIsLiked = async (articleId, userId) => {
+  if (!userId) {
+    return false;
+  }
+
+  const liked = await prisma.articleLike.findUnique({
+    where: {
+      userId_articleId: {
+        userId,
+        articleId,
+      },
+    },
+  });
+
+  return !!liked;
+};
+
 export const findMany = async ({ where, orderBy, skip, take }) => {
   const articles = await prisma.article.findMany({
     where,
-    select: {
-      id: true,
-      title: true,
-      content: true,
-      favoriteCount: true,
-      authorId: true,
-      author: {
-        select: {
-          nickname: true,
-        },
-      },
-      createdAt: true,
-      updatedAt: true,
-    },
+    select: ARTICLE_SELECT,
     orderBy,
     skip,
     take,
@@ -34,14 +53,17 @@ export const count = ({ where }) => {
   return prisma.article.count({ where });
 };
 
-export const create = ({ title, content, authorId }) => {
-  return prisma.article.create({
-    data: {
-      title,
-      content,
-      authorId,
-    },
+export const create = async ({ title, content, authorId }) => {
+  const article = await prisma.article.create({
+    data: { title, content, authorId },
+    select: ARTICLE_SELECT,
   });
+
+  // 방금 생성된 글이라 좋아요는 항상 false
+  return {
+    ...flattenAuthor(article),
+    isLiked: false,
+  };
 };
 
 export const findById = async (id, options = {}) => {
@@ -49,20 +71,7 @@ export const findById = async (id, options = {}) => {
 
   const article = await prisma.article.findUnique({
     where: { id },
-    select: {
-      id: true,
-      title: true,
-      content: true,
-      favoriteCount: true,
-      authorId: true,
-      author: {
-        select: {
-          nickname: true,
-        },
-      },
-      createdAt: true,
-      updatedAt: true,
-    },
+    select: ARTICLE_SELECT,
   });
 
   if (!article) {
@@ -71,34 +80,32 @@ export const findById = async (id, options = {}) => {
 
   const flat = flattenAuthor(article);
 
-  // 좋아요 정보가 필요하지 않거나 비로그인 사용자라면 그냥 반환
-  if (!includeLike || !userId) {
+  // 좋아요 정보가 필요하지 않으면 바로 반환
+  if (!includeLike) {
     return {
       ...flat,
       isLiked: false,
     };
   }
 
-  const isLiked = await prisma.ArticleLike.findUnique({
-    where: {
-      userId_articleId: {
-        userId,
-        articleId: article.id,
-      },
-    },
-  });
+  const isLiked = await getIsLiked(article.id, userId);
 
-  return {
-    ...flat,
-    isLiked: !!isLiked,
-  };
+  return { ...flat, isLiked };
 };
 
-export const update = (id, data) => {
-  return prisma.article.update({
+export const update = async (id, data, userId) => {
+  const article = await prisma.article.update({
     where: { id },
     data,
+    select: ARTICLE_SELECT,
   });
+
+  const isLiked = await getIsLiked(article.id, userId);
+
+  return {
+    ...flattenAuthor(article),
+    isLiked,
+  };
 };
 
 export const remove = (id) => {
