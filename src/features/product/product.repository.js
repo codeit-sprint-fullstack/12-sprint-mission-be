@@ -67,11 +67,11 @@ export const findById = async (id, options = {}) => {
   if (!includeLike || !userId) {
     return {
       ...product,
-      liked: false,
+      isLiked: false,
     };
   }
 
-  const liked = await prisma.productLike.findUnique({
+  const isLiked = await prisma.productLike.findUnique({
     where: {
       userId_productId: {
         userId,
@@ -82,7 +82,7 @@ export const findById = async (id, options = {}) => {
 
   return {
     ...product,
-    isLiked: !!liked,
+    isLiked: !!isLiked,
   };
 };
 

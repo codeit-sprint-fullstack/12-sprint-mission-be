@@ -18,12 +18,12 @@ export const addFavorite = async ({ articleId, productId, userId }) => {
         data: { favoriteCount: { increment: 1 } },
       });
 
-      return { liked: true };
+      return { isLiked: true };
     });
   } catch (e) {
     // 이미 좋아요 상태라면 성공 처리
     if (e.code === "P2002") {
-      return { liked: true };
+      return { isLiked: true };
     }
 
     // 그 외 에러는 그대로 throw
