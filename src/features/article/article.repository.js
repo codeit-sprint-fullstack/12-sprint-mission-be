@@ -1,4 +1,5 @@
 import prisma from "../../lib/prisma.js";
+import { flattenAuthor } from "../../utils/flattenAuthor.js";
 
 const ARTICLE_SELECT = {
   id: true,
@@ -14,11 +15,6 @@ const ARTICLE_SELECT = {
   createdAt: true,
   updatedAt: true,
 };
-
-const flattenAuthor = ({ author, ...rest }) => ({
-  ...rest,
-  authorNickname: author.nickname,
-});
 
 const getIsLiked = async (articleId, userId) => {
   if (!userId) {

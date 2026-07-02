@@ -1,4 +1,40 @@
 import prisma from "../../lib/prisma.js";
+import { flattenAuthor } from "../../utils/flattenAuthor.js";
+
+const PRODUCT_SELECT = {
+  id: true,
+  name: true,
+  description: true,
+  price: true,
+  tags: true,
+  imageUrl: true,
+  favoriteCount: true,
+  authorId: true,
+  author: {
+    select: {
+      nickname: true,
+    },
+  },
+  createdAt: true,
+  updatedAt: true,
+};
+
+const getIsLiked = async (productId, userId) => {
+  if (!userId) {
+    return false;
+  }
+
+  const liked = await prisma.productLike.findUnique({
+    where: {
+      userId_productId: {
+        userId,
+        productId,
+      },
+    },
+  });
+
+  return !!liked;
+};
 
 export const findMany = ({ where, orderBy, skip, take }) => {
   return prisma.product.findMany({
@@ -21,7 +57,7 @@ export const count = ({ where }) => {
   return prisma.product.count({ where });
 };
 
-export const create = ({
+export const create = async ({
   name,
   description,
   price,
@@ -29,7 +65,7 @@ export const create = ({
   authorId,
   imageUrl,
 }) => {
-  return prisma.product.create({
+  const product = await prisma.product.create({
     data: {
       name,
       description,
@@ -38,7 +74,13 @@ export const create = ({
       authorId,
       imageUrl,
     },
+    select: PRODUCT_SELECT,
   });
+
+  return {
+    ...flattenAuthor(article),
+    isLiked: false,
+  };
 };
 
 export const findById = async (id, options = {}) => {
@@ -46,51 +88,41 @@ export const findById = async (id, options = {}) => {
 
   const product = await prisma.product.findUnique({
     where: { id },
-    select: {
-      id: true,
-      name: true,
-      description: true,
-      price: true,
-      tags: true,
-      favoriteCount: true,
-      authorId: true,
-      createdAt: true,
-      updatedAt: true,
-    },
+    select: PRODUCT_SELECT,
   });
 
   if (!product) {
     return null;
   }
 
-  // 좋아요 정보가 필요하지 않거나 비로그인 사용자라면 그냥 반환
-  if (!includeLike || !userId) {
+  const flat = flattenAuthor(product);
+
+  // 좋아요 정보가 필요하지 않으면 바로 반환
+  if (!includeLike) {
     return {
-      ...product,
+      ...flat,
       isLiked: false,
     };
   }
 
-  const isLiked = await prisma.productLike.findUnique({
-    where: {
-      userId_productId: {
-        userId,
-        productId: product.id,
-      },
-    },
-  });
+  const isLiked = await getIsLiked(product.id, userId);
 
-  return {
-    ...product,
-    isLiked: !!isLiked,
-  };
+  return { ...flat, isLiked };
 };
 
-export const update = (id, data) => {
-  return prisma.product.update({
+export const update = async (id, data) => {
+  const product = await prisma.product.update({
     where: { id },
     data,
+    select: PRODUCT_SELECT,
   });
+
+  const isLiked = await getIsLiked(product.id, userId);
+
+  return {
+    ...flattenAuthor(article),
+    isLiked,
+  };
 };
 
 export const remove = (id) => {
