@@ -1,17 +1,22 @@
+import { NextFunction, Request, Response } from "express";
 import { expressjwt } from "express-jwt";
 import jwt from "jsonwebtoken";
 
 export const verifyAccessToken = expressjwt({
-  secret: process.env.JWT_SECRET,
+  secret: process.env.JWT_SECRET!,
   algorithms: ["HS256"],
 });
 export const verifyRefreshToken = expressjwt({
-  secret: process.env.JWT_SECRET,
+  secret: process.env.JWT_SECRET!,
   algorithms: ["HS256"],
   getToken: (req) => req.cookies.refreshToken,
 });
 
-export const authenticateToken = async (req, res, next) => {
+export const authenticateToken = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
 
@@ -20,11 +25,8 @@ export const authenticateToken = async (req, res, next) => {
   }
 
   try {
-    const decoded = jwt.verify(
-      token,
-      process.env.JWT_SECRET || "your-secret-key",
-    );
-    req.auth = decoded;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!);
+    req.auth = decoded as { userId: number };
 
     next();
   } catch (error) {

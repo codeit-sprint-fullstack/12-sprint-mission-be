@@ -1,11 +1,15 @@
-const validate = (schema) => {
-  return (req, res, next) => {
+import { NextFunction, Request, Response } from "express";
+import { ZodSchema } from "zod";
+import { ErrorAccumulator } from "../types/error";
+
+const validate = (schema: ZodSchema) => {
+  return (req: Request, res: Response, next: NextFunction) => {
     const result = schema.safeParse(req.body);
 
     if (!result.success) {
       const errors = Object.values(
-        result.error.issues.reduce((acc, issue) => {
-          const field = issue.path[0];
+        result.error.issues.reduce<ErrorAccumulator>((acc, issue) => {
+          const field = String(issue.path[0]);
 
           if (!acc[field]) {
             acc[field] = {

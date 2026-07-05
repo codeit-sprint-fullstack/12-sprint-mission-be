@@ -1,16 +1,20 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import authRepository from "../repositories/authRepository.js";
+import authRepository from "../repositories/authRepository";
+import { User } from "@prisma/client";
+import { AuthenticationError, ValidationError } from "../types/error";
 
-const signup = async (signupData) => {
+const signup = async (
+  signupData: Pick<User, "email" | "encryptedPassword" | "nickname">,
+): Promise<
+  Omit<User, "encryptedPassword" | "refreshToken" | "createdAt" | "updatedAt">
+> => {
   const existingUser = await authRepository.findByEmail(signupData.email);
   if (existingUser) {
-    const error = new Error("이미 가입된 이메일입니다.");
-    error.statusCode = 409;
-    throw error;
+    throw new ValidationError("이미 가입된 이메일입니다.");
   }
 
-  const hashedPassword = await hashPassword(signupData.password);
+  const hashedPassword = await hashPassword(signupData.encryptedPassword);
   const user = await authRepository.createUser({
     email: signupData.email,
     encryptedPassword: hashedPassword,
@@ -20,22 +24,23 @@ const signup = async (signupData) => {
   return user;
 };
 
-const login = async (loginData) => {
+const login = async (
+  loginData: Pick<User, "email" | "encryptedPassword">,
+): Promise<{
+  accessToken: string;
+  refreshToken: string;
+}> => {
   const user = await authRepository.findByEmail(loginData.email);
   if (!user) {
-    const error = new Error("이메일 또는 비밀번호가 올바르지 않습니다.");
-    error.statusCode = 401;
-    throw error;
+    throw new ValidationError("이메일 또는 비밀번호가 올바르지 않습니다.");
   }
 
   const isMatch = await comparePassword(
-    loginData.password,
+    loginData.encryptedPassword,
     user.encryptedPassword,
   );
   if (!isMatch) {
-    const error = new Error("이메일 또는 비밀번호가 올바르지 않습니다.");
-    error.statusCode = 401;
-    throw error;
+    throw new AuthenticationError("이메일 또는 비밀번호가 올바르지 않습니다.");
   }
 
   const accessToken = generateAccessToken({ userId: user.id });
@@ -47,13 +52,17 @@ const login = async (loginData) => {
   return { accessToken, refreshToken };
 };
 
-const refresh = async (userId, refreshToken) => {
+const refresh = async (
+  userId: User["id"],
+  refreshToken: User["refreshToken"],
+): Promise<{
+  newAccessToken: string;
+  newRefreshToken: string;
+}> => {
   const user = await authRepository.findById(userId);
 
   if (!user || user.refreshToken !== refreshToken) {
-    const error = new Error("유효하지 않은 토큰입니다.");
-    error.statusCode = 401;
-    throw error;
+    throw new AuthenticationError("유효하지 않은 토큰입니다.");
   }
 
   const newAccessToken = generateAccessToken({ userId });
@@ -63,11 +72,13 @@ const refresh = async (userId, refreshToken) => {
   return { newAccessToken, newRefreshToken };
 };
 
-const logout = async (userId) => {
+const logout = async (userId: User["id"]): Promise<void> => {
   await authRepository.updateUser(userId, { refreshToken: null });
 };
 
-const getMe = async (userId) => {
+const getMe = async (
+  userId: User["id"],
+): Promise<Omit<User, "encryptedPassword" | "refreshToken">> => {
   const user = await authRepository.findById(userId);
 
   if (!user) {
@@ -80,27 +91,29 @@ const getMe = async (userId) => {
   return safeUserInfo;
 };
 
-const hashPassword = async (password) => {
+const hashPassword = async (
+  password: NonNullable<User["encryptedPassword"]>,
+) => {
   return bcrypt.hash(password, 10);
 };
 
-const comparePassword = async (inputPassword, hashPassword) => {
+const comparePassword = async (inputPassword: string, hashPassword: string) => {
   return bcrypt.compare(inputPassword, hashPassword);
 };
 
-const generateAccessToken = (payload) => {
-  return jwt.sign(payload, process.env.JWT_SECRET, {
+const generateAccessToken = (payload: { userId: User["id"] }): string => {
+  return jwt.sign(payload, process.env.JWT_SECRET!, {
     expiresIn: "30m",
   });
 };
 
-const generateRefreshToken = (payload) => {
-  return jwt.sign(payload, process.env.JWT_SECRET, {
+const generateRefreshToken = (payload: { userId: User["id"] }): string => {
+  return jwt.sign(payload, process.env.JWT_SECRET!, {
     expiresIn: "2w",
   });
 };
 
-const userProfileResponse = (user) => {
+const userProfileResponse = (user: User) => {
   return {
     id: user.id,
     email: user.email,
