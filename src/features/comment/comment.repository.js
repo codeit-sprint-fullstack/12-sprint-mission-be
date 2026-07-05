@@ -1,11 +1,28 @@
 import prisma from "../../lib/prisma.js";
+import { flattenAuthor } from "../../utils/flattenAuthor.js";
 
-export const findMany = ({ articleId, productId, cursor, take }) => {
-  return prisma.comment.findMany({
+const COMMENT_SELECT = {
+  id: true,
+  content: true,
+  articleId: true,
+  productId: true,
+  authorId: true,
+  author: {
+    select: {
+      nickname: true,
+    },
+  },
+  createdAt: true,
+  updatedAt: true,
+};
+
+export const findMany = async ({ articleId, productId, cursor, take }) => {
+  const comments = await prisma.comment.findMany({
     where: {
       articleId: articleId ?? undefined,
       productId: productId ?? undefined,
     },
+    select: COMMENT_SELECT,
     orderBy: {
       id: "desc",
     },
@@ -15,33 +32,41 @@ export const findMany = ({ articleId, productId, cursor, take }) => {
       skip: 1,
     }),
   });
+
+  return comments.map(flattenAuthor);
 };
 
-export const create = ({ content, articleId, productId, authorId }) => {
-  return prisma.comment.create({
+export const create = async ({ content, articleId, productId, authorId }) => {
+  const comment = await prisma.comment.create({
     data: {
       content,
       articleId,
       productId,
       authorId,
     },
+    select: COMMENT_SELECT,
   });
+
+  return flattenAuthor(comment);
 };
 
-export const findById = (id) => {
-  return prisma.comment.findUniqueOrThrow({
+export const findById = async (id) => {
+  const comment = await prisma.comment.findUniqueOrThrow({
     where: { id },
-    select: {
-      authorId: true,
-    },
+    select: COMMENT_SELECT,
   });
+
+  return flattenAuthor(comment);
 };
 
-export const update = (id, data) => {
-  return prisma.comment.update({
+export const update = async (id, data) => {
+  const comment = await prisma.comment.update({
     where: { id },
     data,
+    select: COMMENT_SELECT,
   });
+
+  return flattenAuthor(comment);
 };
 
 export const remove = (id) => {

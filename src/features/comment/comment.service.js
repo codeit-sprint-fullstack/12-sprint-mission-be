@@ -27,6 +27,26 @@ export const getComments = async ({ articleId, productId, cursor, take }) => {
   };
 };
 
+export const findMany = ({ articleId, productId, cursor, take }) => {
+  const comments = prisma.comment.findMany({
+    where: {
+      articleId: articleId ?? undefined,
+      productId: productId ?? undefined,
+    },
+    select: COMMENT_SELECT,
+    orderBy: {
+      id: "desc",
+    },
+    take,
+    ...(cursor && {
+      cursor: { id: cursor },
+      skip: 1,
+    }),
+  });
+
+  return comments.map(flattenAuthor);
+};
+
 export const createComment = async ({
   content,
   articleId,
