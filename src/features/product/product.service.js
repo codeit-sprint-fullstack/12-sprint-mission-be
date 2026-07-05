@@ -14,6 +14,7 @@ export const getProducts = async ({ page, pageSize, orderBy, keyword }) => {
 
   const orderMap = {
     recent: { createdAt: "desc" },
+    favorite: { favoriteCount: "desc" },
   };
 
   const order = orderMap[orderBy] || { createdAt: "desc" };
