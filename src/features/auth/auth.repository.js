@@ -3,6 +3,11 @@ import prisma from "../../lib/prisma.js";
 export const createUser = (user) => {
   return prisma.user.create({
     data: user,
+    select: {
+      id: true,
+      email: true,
+      nickname: true,
+    },
   });
 };
 
