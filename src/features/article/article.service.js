@@ -49,10 +49,18 @@ export const createArticle = async ({ title, content, authorId }) => {
 };
 
 export const getArticle = async (id, userId) => {
-  return articleRepository.findById(id, {
+  const article = await articleRepository.findById(id, {
     userId,
     includeLike: true,
   });
+
+  if (!article) {
+    const err = new Error("게시글이 존재하지 않습니다.");
+    err.status = 404;
+    throw err;
+  }
+
+  return article;
 };
 
 export const updateArticle = async (id, fields, userId) => {

@@ -59,10 +59,18 @@ export const createProduct = async ({
 };
 
 export const getProduct = async (id, userId) => {
-  return productRepository.findById(id, {
+  const product = await productRepository.findById(id, {
     userId,
     includeLike: true,
   });
+
+  if (!product) {
+    const err = new Error("상품이 존재하지 않습니다.");
+    err.status = 404;
+    throw err;
+  }
+
+  return product;
 };
 
 export const updateProduct = async (id, fields, userId) => {
