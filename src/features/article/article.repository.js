@@ -12,6 +12,7 @@ const ARTICLE_SELECT = {
       nickname: true,
     },
   },
+  imageUrls: true,
   createdAt: true,
   updatedAt: true,
 };
@@ -49,9 +50,9 @@ export const count = ({ where }) => {
   return prisma.article.count({ where });
 };
 
-export const create = async ({ title, content, authorId }) => {
+export const create = async ({ title, content, authorId, imageUrls }) => {
   const article = await prisma.article.create({
-    data: { title, content, authorId },
+    data: { title, content, authorId, imageUrls },
     select: ARTICLE_SELECT,
   });
 

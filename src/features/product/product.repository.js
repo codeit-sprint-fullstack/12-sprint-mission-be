@@ -7,7 +7,7 @@ const PRODUCT_SELECT = {
   description: true,
   price: true,
   tags: true,
-  imageUrl: true,
+  imageUrls: true,
   favoriteCount: true,
   authorId: true,
   author: {
@@ -46,6 +46,7 @@ export const findMany = ({ where, orderBy, skip, take }) => {
       favoriteCount: true,
       createdAt: true,
       updatedAt: true,
+      imageUrls: true,
     },
     orderBy,
     skip,
@@ -63,7 +64,7 @@ export const create = async ({
   price,
   tags,
   authorId,
-  imageUrl,
+  imageUrls,
 }) => {
   const product = await prisma.product.create({
     data: {
@@ -72,7 +73,7 @@ export const create = async ({
       price,
       tags,
       authorId,
-      imageUrl,
+      imageUrls,
     },
     select: PRODUCT_SELECT,
   });
@@ -97,7 +98,6 @@ export const findById = async (id, options = {}) => {
 
   const flat = flattenAuthor(product);
 
-  // 좋아요 정보가 필요하지 않으면 바로 반환
   if (!includeLike) {
     return {
       ...flat,

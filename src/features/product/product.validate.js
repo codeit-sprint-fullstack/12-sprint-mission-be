@@ -1,5 +1,7 @@
+const MAX_IMAGE_COUNT = 3;
+
 export const validateProductFields = (fields, { isCreate = false } = {}) => {
-  const { name, description, price, tags } = fields;
+  const { name, description, price, tags, imageUrls } = fields;
 
   if (
     isCreate &&
@@ -44,6 +46,16 @@ export const validateProductFields = (fields, { isCreate = false } = {}) => {
   if (tags !== undefined) {
     if (!Array.isArray(tags) || tags.some((tag) => tag.length > 5)) {
       const err = new Error("태그는 5글자 이내여야 합니다");
+      err.status = 400;
+      throw err;
+    }
+  }
+
+  if (imageUrls !== undefined) {
+    if (!Array.isArray(imageUrls) || imageUrls.length > MAX_IMAGE_COUNT) {
+      const err = new Error(
+        `이미지는 최대 ${MAX_IMAGE_COUNT}장까지 등록할 수 있습니다`,
+      );
       err.status = 400;
       throw err;
     }

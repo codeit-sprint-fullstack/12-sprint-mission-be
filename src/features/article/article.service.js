@@ -38,16 +38,6 @@ export const getArticles = async ({ page, pageSize, orderBy, keyword }) => {
   };
 };
 
-export const createArticle = async ({ title, content, authorId }) => {
-  validateArticleFields({ title, content }, { isCreate: true });
-
-  return articleRepository.create({
-    title,
-    content,
-    authorId,
-  });
-};
-
 export const getArticle = async (id, userId) => {
   const article = await articleRepository.findById(id, {
     userId,
@@ -61,6 +51,22 @@ export const getArticle = async (id, userId) => {
   }
 
   return article;
+};
+
+export const createArticle = async ({
+  title,
+  content,
+  authorId,
+  imageUrls,
+}) => {
+  validateArticleFields({ title, content, imageUrls }, { isCreate: true });
+
+  return articleRepository.create({
+    title,
+    content,
+    authorId,
+    imageUrls,
+  });
 };
 
 export const updateArticle = async (id, fields, userId) => {

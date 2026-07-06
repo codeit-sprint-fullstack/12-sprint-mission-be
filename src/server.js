@@ -7,6 +7,7 @@ import productsRouter from "./features/product/product.route.js";
 import articlesRouter from "./features/article/article.route.js";
 import commentsRouter from "./features/comment/comment.route.js";
 import usersRouter from "./features/user/user.route.js";
+import path from "path";
 
 import errorHandler from "./middleware/error-handler.middleware.js";
 
@@ -23,7 +24,7 @@ app.use(
 );
 app.use(express.json());
 app.use(cookieParser());
-app.use("/uploads", express.static("uploads"));
+app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
 app.use("/auth", authRouter);
 app.use("/products", productsRouter);

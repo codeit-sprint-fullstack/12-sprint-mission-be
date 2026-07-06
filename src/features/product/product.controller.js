@@ -27,7 +27,9 @@ export const getProduct = asyncHandler(async (req, res) => {
 export const createProduct = asyncHandler(async (req, res) => {
   const { name, description, price, tags } = req.body;
 
-  const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
+  const imageUrls = (req.files ?? []).map(
+    (file) => `/uploads/${file.filename}`,
+  );
 
   const product = await productService.createProduct({
     name,
@@ -35,16 +37,31 @@ export const createProduct = asyncHandler(async (req, res) => {
     price: Number(price),
     tags: tags ? JSON.parse(tags) : [],
     authorId: req.user.id,
-    imageUrl,
+    imageUrls,
   });
 
   res.status(201).json({ data: product });
 });
 
 export const updateProduct = asyncHandler(async (req, res) => {
+  const { name, description, price, tags, existingImageUrls } = req.body;
+
+  const keepImageUrls = existingImageUrls ? JSON.parse(existingImageUrls) : [];
+  const newImageUrls = (req.files ?? []).map(
+    (file) => `/uploads/${file.filename}`,
+  );
+
+  const fields = {
+    ...(name !== undefined && { name }),
+    ...(description !== undefined && { description }),
+    ...(price !== undefined && { price: Number(price) }),
+    ...(tags !== undefined && { tags: JSON.parse(tags) }),
+    imageUrls: [...keepImageUrls, ...newImageUrls],
+  };
+
   const updated = await productService.updateProduct(
     req.params.id,
-    req.body,
+    fields,
     req.user.id,
   );
   res.json({ data: updated });

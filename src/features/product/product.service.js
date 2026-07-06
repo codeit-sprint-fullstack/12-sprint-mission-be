@@ -44,9 +44,12 @@ export const createProduct = async ({
   price,
   tags,
   authorId,
-  imageUrl,
+  imageUrls,
 }) => {
-  validateProductFields({ name, description, price, tags });
+  validateProductFields(
+    { name, description, price, tags, imageUrls },
+    { isCreate: true },
+  );
 
   return productRepository.create({
     name,
@@ -54,7 +57,7 @@ export const createProduct = async ({
     price,
     tags,
     authorId,
-    imageUrl,
+    imageUrls,
   });
 };
 
@@ -79,7 +82,7 @@ export const updateProduct = async (id, fields, userId) => {
   const product = await productRepository.findById(id);
   validateAuthor(product, userId);
 
-  return productRepository.update(id, fields);
+  return productRepository.update(id, fields, userId);
 };
 
 export const deleteProduct = async (id, userId) => {

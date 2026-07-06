@@ -19,25 +19,45 @@ export const getArticles = asyncHandler(async (req, res) => {
   res.json(result);
 });
 
-export const createArticle = asyncHandler(async (req, res) => {
-  const article = await articleService.createArticle({
-    ...req.body,
-    authorId: req.user.id,
-  });
-  res.status(201).json({ data: article });
-});
-
 export const getArticle = asyncHandler(async (req, res) => {
   const article = await articleService.getArticle(req.params.id, req.user?.id);
   res.json({ data: article });
 });
 
+export const createArticle = asyncHandler(async (req, res) => {
+  const imageUrls = (req.files ?? []).map(
+    (file) => `/uploads/${file.filename}`,
+  );
+
+  const article = await articleService.createArticle({
+    ...req.body,
+    authorId: req.user.id,
+    imageUrls,
+  });
+
+  res.status(201).json({ data: article });
+});
+
 export const updateArticle = asyncHandler(async (req, res) => {
+  const { title, content, existingImageUrls } = req.body;
+
+  const keepImageUrls = existingImageUrls ? JSON.parse(existingImageUrls) : [];
+  const newImageUrls = (req.files ?? []).map(
+    (file) => `/uploads/${file.filename}`,
+  );
+
+  const fields = {
+    ...(title !== undefined && { title }),
+    ...(content !== undefined && { content }),
+    imageUrls: [...keepImageUrls, ...newImageUrls],
+  };
+
   const article = await articleService.updateArticle(
     req.params.id,
-    req.body,
+    fields,
     req.user.id,
   );
+
   res.json({ data: article });
 });
 

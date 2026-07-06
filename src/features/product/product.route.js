@@ -9,17 +9,25 @@ import * as favoriteController from "../favorite/favorite.controller.js";
 
 const router = express.Router();
 
+const MAX_IMAGE_COUNT = 3;
+
 router.use(setResource("상품"));
 
 router.get("/", productController.getProducts);
 router.post(
   "/",
   requireAuth,
-  upload.single("image"),
+  upload.array("images", MAX_IMAGE_COUNT),
   productController.createProduct,
 );
 router.get("/:id", validateId, optionalAuth, productController.getProduct);
-router.patch("/:id", validateId, requireAuth, productController.updateProduct);
+router.patch(
+  "/:id",
+  validateId,
+  requireAuth,
+  upload.array("images", MAX_IMAGE_COUNT),
+  productController.updateProduct,
+);
 router.delete("/:id", validateId, requireAuth, productController.deleteProduct);
 
 router.get("/:id/comments", validateId, commentController.getComments);
@@ -42,4 +50,5 @@ router.delete(
   requireAuth,
   favoriteController.removeFavorite,
 );
+
 export default router;
