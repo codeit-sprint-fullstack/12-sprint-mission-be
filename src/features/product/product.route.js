@@ -36,5 +36,10 @@ router.post(
   requireAuth,
   favoriteController.addFavorite,
 );
-
+router.delete(
+  "/:id/favorite",
+  validateId,
+  requireAuth,
+  favoriteController.removeFavorite,
+);
 export default router;
