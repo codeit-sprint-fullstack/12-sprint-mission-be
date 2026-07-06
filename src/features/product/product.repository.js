@@ -78,7 +78,7 @@ export const create = async ({
   });
 
   return {
-    ...flattenAuthor(article),
+    ...flattenAuthor(product),
     isLiked: false,
   };
 };
@@ -120,7 +120,7 @@ export const update = async (id, data) => {
   const isLiked = await getIsLiked(product.id, userId);
 
   return {
-    ...flattenAuthor(article),
+    ...flattenAuthor(product),
     isLiked,
   };
 };
