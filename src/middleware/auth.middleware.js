@@ -1,6 +1,6 @@
 import { verifyAccessToken } from "../lib/jwt.js";
 
-const requireAuth = (req, res, next) => {
+export const requireAuth = (req, res, next) => {
   const token = req.cookies.accessToken;
 
   if (!token) {
@@ -24,4 +24,25 @@ const requireAuth = (req, res, next) => {
   }
 };
 
-export default requireAuth;
+export const optionalAuth = (req, res, next) => {
+  const token = req.cookies.accessToken;
+
+  // 토큰이 없으면 비로그인 사용자로 간주
+  if (!token) {
+    req.user = null;
+    return next();
+  }
+
+  try {
+    const payload = verifyAccessToken(token);
+
+    req.user = {
+      id: payload.userId,
+    };
+  } catch {
+    // 토큰이 만료되거나 유효하지 않아도 에러를 내지 않음
+    req.user = null;
+  }
+
+  next();
+};
