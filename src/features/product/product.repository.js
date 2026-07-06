@@ -110,7 +110,7 @@ export const findById = async (id, options = {}) => {
   return { ...flat, isLiked };
 };
 
-export const update = async (id, data) => {
+export const update = async (id, data, userId) => {
   const product = await prisma.product.update({
     where: { id },
     data,
