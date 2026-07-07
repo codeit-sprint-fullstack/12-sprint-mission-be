@@ -10,7 +10,7 @@ const db: PrismaClient =
   });
 
 if (process.env.NODE_ENV !== "production") {
-  globalThis.prisma = prisma;
+  globalThis.prisma = db;
 }
 
 export default db;
