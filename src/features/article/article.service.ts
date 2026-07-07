@@ -1,9 +1,20 @@
 import { validateAuthor } from "../../validations/authorization.validation.js";
 import * as articleRepository from "./article.repository.js";
 import { validateArticleFields } from "./article.validation.js";
+import type {
+  CreateArticleInput,
+  UpdateArticleInput,
+  GetArticlesParams,
+} from "./article.types.js";
+import { Prisma } from "@prisma/client";
 
-export const getArticles = async ({ page, pageSize, orderBy, keyword }) => {
-  const where = keyword
+export const getArticles = async ({
+  page,
+  pageSize,
+  orderBy,
+  keyword,
+}: GetArticlesParams) => {
+  const where: Prisma.ArticleWhereInput = keyword
     ? {
         OR: [
           { title: { contains: keyword, mode: "insensitive" } },
@@ -12,7 +23,7 @@ export const getArticles = async ({ page, pageSize, orderBy, keyword }) => {
       }
     : {};
 
-  const orderMap = {
+  const orderMap: Record<string, Prisma.ArticleOrderByWithRelationInput> = {
     recent: { createdAt: "desc" },
     favorite: { favoriteCount: "desc" },
   };
@@ -23,8 +34,8 @@ export const getArticles = async ({ page, pageSize, orderBy, keyword }) => {
     articleRepository.findMany({
       where,
       orderBy: order,
-      skip: (Number(page) - 1) * Number(pageSize),
-      take: Number(pageSize),
+      skip: (page - 1) * pageSize,
+      take: pageSize,
     }),
     articleRepository.count({ where }),
   ]);
@@ -33,43 +44,25 @@ export const getArticles = async ({ page, pageSize, orderBy, keyword }) => {
     data: articles,
     meta: {
       totalCount,
-      totalPages: Math.ceil(totalCount / Number(pageSize)),
+      totalPages: Math.ceil(totalCount / pageSize),
     },
   };
 };
 
-export const getArticle = async (id, userId) => {
-  const article = await articleRepository.findById(id, {
-    userId,
-    includeLike: true,
-  });
-
-  if (!article) {
-    const err = new Error("게시글이 존재하지 않습니다.");
-    err.status = 404;
-    throw err;
-  }
-
-  return article;
+export const getArticle = async (id: number, userId: number | undefined) => {
+  return articleRepository.findById(id, { userId, includeLike: true });
 };
 
-export const createArticle = async ({
-  title,
-  content,
-  authorId,
-  imageUrls,
-}) => {
-  validateArticleFields({ title, content, imageUrls }, { isCreate: true });
-
-  return articleRepository.create({
-    title,
-    content,
-    authorId,
-    imageUrls,
-  });
+export const createArticle = async (input: CreateArticleInput) => {
+  validateArticleFields(input, { isCreate: true });
+  return articleRepository.create(input);
 };
 
-export const updateArticle = async (id, fields, userId) => {
+export const updateArticle = async (
+  id: number,
+  fields: UpdateArticleInput,
+  userId: number,
+) => {
   validateArticleFields(fields);
 
   const article = await articleRepository.findById(id);
@@ -78,7 +71,7 @@ export const updateArticle = async (id, fields, userId) => {
   return articleRepository.update(id, fields, userId);
 };
 
-export const deleteArticle = async (id, userId) => {
+export const deleteArticle = async (id: number, userId: number) => {
   const article = await articleRepository.findById(id);
   validateAuthor(article, userId);
 
