@@ -1,6 +1,8 @@
+import { ErrorRequestHandler } from "express";
 import multer from "multer";
+import type { AppError } from "../types/error.js";
 
-const errorHandler = (err, req, res, next) => {
+const errorHandler: ErrorRequestHandler = (err: AppError, req, res, next) => {
   console.error(err);
 
   // Prisma 에러 처리 (404)
@@ -9,30 +11,33 @@ const errorHandler = (err, req, res, next) => {
   if (err.code === "P2025" || err.code === "P2003") {
     const resource = req.resource || "리소스";
 
-    return res.status(404).json({
+    res.status(404).json({
       error: `${resource}을(를) 찾을 수 없습니다`,
     });
+    return;
   }
 
   // 커스텀 에러
   if (err.status) {
-    return res.status(err.status).json({
+    res.status(err.status).json({
       error: err.message,
     });
+    return;
   }
 
   // 이미지 업로드 에러
   if (err instanceof multer.MulterError) {
     if (err.code === "LIMIT_FILE_SIZE") {
-      return res
-        .status(400)
-        .json({ error: "파일 크기는 5MB를 초과할 수 없습니다" });
+      res.status(400).json({ error: "파일 크기는 5MB를 초과할 수 없습니다" });
+      return;
     }
-    return res.status(400).json({ error: err.message });
+    res.status(400).json({ error: err.message });
+    return;
   }
 
   if (err.message === "이미지 파일만 업로드 가능합니다") {
-    return res.status(400).json({ error: err.message });
+    res.status(400).json({ error: err.message });
+    return;
   }
 
   // 그 외 서버 에러

@@ -1,23 +1,28 @@
-import multer from "multer";
+import multer, { FileFilterCallback } from "multer";
 import path from "path";
+import { Request } from "express";
 
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
+  destination: (req: Request, file: Express.Multer.File, cb) => {
     cb(null, "uploads/");
   },
 
-  filename: (req, file, cb) => {
+  filename: (req: Request, file: Express.Multer.File, cb) => {
     const ext = path.extname(file.originalname); // 확장자만 추출
     const uniqueName = `${Date.now()}-${Math.round(Math.random() * 1e9)}${ext}`;
     cb(null, uniqueName);
   },
 });
 
-const fileFilter = (req, file, cb) => {
+const fileFilter = (
+  req: Request,
+  file: Express.Multer.File,
+  cb: FileFilterCallback,
+): void => {
   if (file.mimetype.startsWith("image/")) {
     cb(null, true);
   } else {
-    cb(new Error("이미지 파일만 업로드 가능합니다"), false);
+    cb(new Error("이미지 파일만 업로드 가능합니다"));
   }
 };
 
