@@ -12,42 +12,34 @@ const router = express.Router();
 
 router.use(setResource("상품"));
 
-router.get("/", productController.getProducts);
-router.post(
-  "/",
-  requireAuth,
-  upload.array("images", MAX_IMAGE_COUNT),
-  productController.createProduct,
-);
-router.get("/:id", validateId, optionalAuth, productController.getProduct);
-router.patch(
-  "/:id",
-  validateId,
-  requireAuth,
-  upload.array("images", MAX_IMAGE_COUNT),
-  productController.updateProduct,
-);
-router.delete("/:id", validateId, requireAuth, productController.deleteProduct);
+router
+  .route("/")
+  .get(productController.getProducts)
+  .post(
+    requireAuth,
+    upload.array("images", MAX_IMAGE_COUNT),
+    productController.createProduct,
+  );
 
-router.get("/:id/comments", validateId, commentController.getComments);
-router.post(
-  "/:id/comments",
-  validateId,
-  requireAuth,
-  commentController.createComment,
-);
+router
+  .route("/:id")
+  .get(validateId, optionalAuth, productController.getProduct)
+  .patch(
+    validateId,
+    requireAuth,
+    upload.array("images", MAX_IMAGE_COUNT),
+    productController.updateProduct,
+  )
+  .delete(validateId, requireAuth, productController.deleteProduct);
 
-router.post(
-  "/:id/favorite",
-  validateId,
-  requireAuth,
-  favoriteController.addFavorite,
-);
-router.delete(
-  "/:id/favorite",
-  validateId,
-  requireAuth,
-  favoriteController.removeFavorite,
-);
+router
+  .route("/:id/comments")
+  .get(validateId, commentController.getComments)
+  .post(validateId, requireAuth, commentController.createComment);
+
+router
+  .route("/:id/favorite")
+  .post(validateId, requireAuth, favoriteController.addFavorite)
+  .delete(validateId, requireAuth, favoriteController.removeFavorite);
 
 export default router;

@@ -8,7 +8,9 @@ const router = express.Router();
 
 router.use(setResource("댓글"));
 
-router.patch("/:id", validateId, requireAuth, commentController.updateComment);
-router.delete("/:id", validateId, requireAuth, commentController.deleteComment);
+router
+  .route("/:id")
+  .patch(validateId, requireAuth, commentController.updateComment)
+  .delete(validateId, requireAuth, commentController.deleteComment);
 
 export default router;
