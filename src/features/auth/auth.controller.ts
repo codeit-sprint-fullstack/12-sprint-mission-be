@@ -1,13 +1,14 @@
+import type { CookieOptions } from "express";
 import {
   ACCESS_TOKEN_MAX_AGE,
   REFRESH_TOKEN_MAX_AGE,
-} from "../../lib/constants.js";
+} from "../../constants/token.constants.js";
 import asyncHandler from "../../middleware/async-handler.middleware.js";
 import * as authService from "./auth.service.js";
 
 const isProd = process.env.NODE_ENV === "production";
 
-const cookieOptions = {
+const cookieOptions: CookieOptions = {
   httpOnly: true,
   secure: isProd,
   sameSite: isProd ? "none" : "lax",
@@ -15,7 +16,6 @@ const cookieOptions = {
 
 export const signup = asyncHandler(async (req, res) => {
   const user = await authService.signup(req.body);
-
   res.status(201).json({ data: user });
 });
 
@@ -36,7 +36,6 @@ export const login = asyncHandler(async (req, res) => {
 
 export const refresh = asyncHandler(async (req, res) => {
   const refreshToken = req.cookies.refreshToken;
-
   const { accessToken } = await authService.refresh(refreshToken);
 
   res.cookie("accessToken", accessToken, {
@@ -48,7 +47,7 @@ export const refresh = asyncHandler(async (req, res) => {
 });
 
 export const logout = asyncHandler(async (req, res) => {
-  await authService.logout(req.user.id);
+  await authService.logout(req.user!.id);
 
   res.clearCookie("accessToken", cookieOptions);
   res.clearCookie("refreshToken", cookieOptions);
