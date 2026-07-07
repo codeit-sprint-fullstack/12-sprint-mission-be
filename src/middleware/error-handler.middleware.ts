@@ -1,27 +1,26 @@
 import { ErrorRequestHandler } from "express";
 import multer from "multer";
-import type { AppError } from "../types/error.js";
+import { Prisma } from "@prisma/client";
+import { AppError } from "../types/error.js";
 
-const errorHandler: ErrorRequestHandler = (err: AppError, req, res, next) => {
+const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
   console.error(err);
 
   // Prisma 에러 처리 (404)
   // P2025: 레코드가 없음
   // P2003: 존재하지 않는 외래 키 참조
-  if (err.code === "P2025" || err.code === "P2003") {
+  if (
+    err instanceof Prisma.PrismaClientKnownRequestError &&
+    (err.code === "P2025" || err.code === "P2003")
+  ) {
     const resource = req.resource || "리소스";
-
-    res.status(404).json({
-      error: `${resource}을(를) 찾을 수 없습니다`,
-    });
+    res.status(404).json({ error: `${resource}을(를) 찾을 수 없습니다` });
     return;
   }
 
   // 커스텀 에러
-  if (err.status) {
-    res.status(err.status).json({
-      error: err.message,
-    });
+  if (err instanceof AppError) {
+    res.status(err.status).json({ error: err.message });
     return;
   }
 
@@ -35,7 +34,10 @@ const errorHandler: ErrorRequestHandler = (err: AppError, req, res, next) => {
     return;
   }
 
-  if (err.message === "이미지 파일만 업로드 가능합니다") {
+  if (
+    err instanceof Error &&
+    err.message === "이미지 파일만 업로드 가능합니다"
+  ) {
     res.status(400).json({ error: err.message });
     return;
   }

@@ -1,7 +1,7 @@
 import { RequestHandler } from "express";
 import type { JwtPayload } from "jsonwebtoken";
 import { verifyAccessToken } from "../lib/jwt.js";
-import type { AppError } from "../types/error.js";
+import { AppError } from "../types/error.js";
 
 type AccessTokenPayload = JwtPayload & {
   userId: number;
@@ -11,9 +11,7 @@ export const requireAuth: RequestHandler = (req, res, next) => {
   const token = req.cookies.accessToken;
 
   if (!token) {
-    const err: AppError = new Error("로그인이 필요합니다");
-    err.status = 401;
-    return next(err);
+    return next(new AppError("로그인이 필요합니다", 401));
   }
 
   try {
@@ -25,9 +23,7 @@ export const requireAuth: RequestHandler = (req, res, next) => {
 
     next();
   } catch {
-    const err: AppError = new Error("유효하지 않거나 만료된 토큰입니다");
-    err.status = 401;
-    next(err);
+    next(new AppError("유효하지 않거나 만료된 토큰입니다", 401));
   }
 };
 
