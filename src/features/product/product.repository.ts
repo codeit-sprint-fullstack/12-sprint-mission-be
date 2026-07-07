@@ -1,14 +1,14 @@
+import { Prisma } from "@prisma/client";
 import prisma from "../../lib/prisma.js";
 import { flattenAuthor } from "../../utils/flatten-author.js";
-import { Prisma } from "@prisma/client";
+import type { FindByIdOptions, FindManyParams } from "../../types/common.js";
 import {
   PRODUCT_SELECT,
-  ProductListItem,
-  FlattenedProduct,
-  ProductWithLike,
-  CreateProductInput,
-  UpdateProductInput,
-  FindByIdOptions,
+  type ProductListItem,
+  type FlattenedProduct,
+  type ProductWithLike,
+  type CreateProductInput,
+  type UpdateProductInput,
 } from "./product.types.js";
 
 const getIsLiked = async (
@@ -31,19 +31,15 @@ const getIsLiked = async (
   return !!liked;
 };
 
-type FindManyParams = {
-  where: Prisma.ProductWhereInput;
-  orderBy: Prisma.ProductOrderByWithRelationInput;
-  skip: number;
-  take: number;
-};
-
 export const findMany = ({
   where,
   orderBy,
   skip,
   take,
-}: FindManyParams): Promise<ProductListItem[]> => {
+}: FindManyParams<
+  Prisma.ProductWhereInput,
+  Prisma.ProductOrderByWithRelationInput
+>): Promise<ProductListItem[]> => {
   return prisma.product.findMany({
     where,
     select: {

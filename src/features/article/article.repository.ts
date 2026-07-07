@@ -1,13 +1,13 @@
 import { Prisma } from "@prisma/client";
 import prisma from "../../lib/prisma.js";
 import { flattenAuthor } from "../../utils/flatten-author.js";
+import type { FindByIdOptions, FindManyParams } from "../../types/common.js";
 import {
   ARTICLE_SELECT,
   type FlattenedArticle,
   type ArticleWithLike,
   type CreateArticleInput,
   type UpdateArticleInput,
-  type FindByIdOptions,
 } from "./article.types.js";
 
 const getIsLiked = async (
@@ -30,19 +30,15 @@ const getIsLiked = async (
   return !!liked;
 };
 
-type FindManyParams = {
-  where: Prisma.ArticleWhereInput;
-  orderBy: Prisma.ArticleOrderByWithRelationInput;
-  skip: number;
-  take: number;
-};
-
 export const findMany = async ({
   where,
   orderBy,
   skip,
   take,
-}: FindManyParams): Promise<FlattenedArticle[]> => {
+}: FindManyParams<
+  Prisma.ArticleWhereInput,
+  Prisma.ArticleOrderByWithRelationInput
+>): Promise<FlattenedArticle[]> => {
   const articles = await prisma.article.findMany({
     where,
     select: ARTICLE_SELECT,

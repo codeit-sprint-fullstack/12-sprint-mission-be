@@ -1,19 +1,19 @@
+import { Prisma } from "@prisma/client";
 import { validateAuthor } from "../../validations/authorization.validation.js";
+import type { ListQueryParams } from "../../types/common.js";
 import * as articleRepository from "./article.repository.js";
 import { validateArticleFields } from "./article.validation.js";
 import type {
   CreateArticleInput,
   UpdateArticleInput,
-  GetArticlesParams,
 } from "./article.types.js";
-import { Prisma } from "@prisma/client";
 
 export const getArticles = async ({
   page,
   pageSize,
   orderBy,
   keyword,
-}: GetArticlesParams) => {
+}: ListQueryParams) => {
   const where: Prisma.ArticleWhereInput = keyword
     ? {
         OR: [

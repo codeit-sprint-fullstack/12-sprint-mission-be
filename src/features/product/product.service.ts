@@ -1,19 +1,19 @@
+import { Prisma } from "@prisma/client";
 import { validateAuthor } from "../../validations/authorization.validation.js";
+import type { ListQueryParams } from "../../types/common.js";
 import * as productRepository from "./product.repository.js";
 import { validateProductFields } from "./product.validate.js";
 import type {
   CreateProductInput,
   UpdateProductInput,
-  GetProductsParams,
 } from "./product.types.js";
-import { Prisma } from "@prisma/client";
 
 export const getProducts = async ({
   page,
   pageSize,
   orderBy,
   keyword,
-}: GetProductsParams) => {
+}: ListQueryParams) => {
   const where: Prisma.ProductWhereInput = keyword
     ? {
         OR: [
