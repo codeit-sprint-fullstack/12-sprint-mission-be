@@ -1,8 +1,8 @@
-import prisma from "../../lib/prisma.js";
+import db from "../../lib/prisma.js";
 
 export const addFavorite = async ({ articleId, productId, userId }) => {
   try {
-    return prisma.$transaction(async (tx) => {
+    return db.$transaction(async (tx) => {
       const isArticle = !!articleId;
       const targetId = articleId ?? productId;
 
@@ -33,7 +33,7 @@ export const addFavorite = async ({ articleId, productId, userId }) => {
 
 export const removeFavorite = async ({ articleId, productId, userId }) => {
   try {
-    return prisma.$transaction(async (tx) => {
+    return db.$transaction(async (tx) => {
       const isArticle = !!articleId;
       const targetId = articleId ?? productId;
 

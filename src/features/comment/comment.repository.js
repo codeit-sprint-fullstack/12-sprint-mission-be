@@ -1,4 +1,4 @@
-import prisma from "../../lib/prisma.js";
+import db from "../../lib/prisma.js";
 import { flattenAuthor } from "../../utils/flattenAuthor.js";
 
 const COMMENT_SELECT = {
@@ -17,7 +17,7 @@ const COMMENT_SELECT = {
 };
 
 export const findMany = async ({ articleId, productId, cursor, take }) => {
-  const comments = await prisma.comment.findMany({
+  const comments = await db.comment.findMany({
     where: {
       articleId: articleId ?? undefined,
       productId: productId ?? undefined,
@@ -37,7 +37,7 @@ export const findMany = async ({ articleId, productId, cursor, take }) => {
 };
 
 export const create = async ({ content, articleId, productId, authorId }) => {
-  const comment = await prisma.comment.create({
+  const comment = await db.comment.create({
     data: {
       content,
       articleId,
@@ -51,7 +51,7 @@ export const create = async ({ content, articleId, productId, authorId }) => {
 };
 
 export const findById = async (id) => {
-  const comment = await prisma.comment.findUniqueOrThrow({
+  const comment = await db.comment.findUniqueOrThrow({
     where: { id },
     select: COMMENT_SELECT,
   });
@@ -60,7 +60,7 @@ export const findById = async (id) => {
 };
 
 export const update = async (id, data) => {
-  const comment = await prisma.comment.update({
+  const comment = await db.comment.update({
     where: { id },
     data,
     select: COMMENT_SELECT,
@@ -70,7 +70,7 @@ export const update = async (id, data) => {
 };
 
 export const remove = (id) => {
-  return prisma.comment.delete({
+  return db.comment.delete({
     where: { id },
   });
 };

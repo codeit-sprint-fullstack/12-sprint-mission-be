@@ -1,5 +1,5 @@
 import { Prisma } from "@prisma/client";
-import prisma from "../../lib/prisma.js";
+import db from "../../lib/prisma.js";
 import { flattenAuthor } from "../../utils/flatten-author.js";
 import type { FindByIdOptions, FindManyParams } from "../../types/common.js";
 import {
@@ -19,7 +19,7 @@ const getIsLiked = async (
     return false;
   }
 
-  const liked = await prisma.productLike.findUnique({
+  const liked = await db.productLike.findUnique({
     where: {
       userId_productId: {
         userId,
@@ -40,7 +40,7 @@ export const findMany = ({
   Prisma.ProductWhereInput,
   Prisma.ProductOrderByWithRelationInput
 >): Promise<ProductListItem[]> => {
-  return prisma.product.findMany({
+  return db.product.findMany({
     where,
     select: {
       id: true,
@@ -62,13 +62,13 @@ export const count = ({
 }: {
   where: Prisma.ProductWhereInput;
 }): Promise<number> => {
-  return prisma.product.count({ where });
+  return db.product.count({ where });
 };
 
 export const create = async (
   input: CreateProductInput,
 ): Promise<ProductWithLike> => {
-  const product = await prisma.product.create({
+  const product = await db.product.create({
     data: input,
     select: PRODUCT_SELECT,
   });
@@ -85,7 +85,7 @@ export const findById = async (
 ): Promise<ProductWithLike> => {
   const { userId, includeLike = false } = options;
 
-  const product = await prisma.product.findUniqueOrThrow({
+  const product = await db.product.findUniqueOrThrow({
     where: { id },
     select: PRODUCT_SELECT,
   });
@@ -106,7 +106,7 @@ export const update = async (
   data: UpdateProductInput,
   userId: number,
 ): Promise<ProductWithLike> => {
-  const product = await prisma.product.update({
+  const product = await db.product.update({
     where: { id },
     data,
     select: PRODUCT_SELECT,
@@ -121,5 +121,5 @@ export const update = async (
 };
 
 export const remove = (id: number) => {
-  return prisma.product.delete({ where: { id } });
+  return db.product.delete({ where: { id } });
 };

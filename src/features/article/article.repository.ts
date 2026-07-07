@@ -1,5 +1,5 @@
 import { Prisma } from "@prisma/client";
-import prisma from "../../lib/prisma.js";
+import db from "../../lib/prisma.js";
 import { flattenAuthor } from "../../utils/flatten-author.js";
 import type { FindByIdOptions, FindManyParams } from "../../types/common.js";
 import {
@@ -18,7 +18,7 @@ const getIsLiked = async (
     return false;
   }
 
-  const liked = await prisma.articleLike.findUnique({
+  const liked = await db.articleLike.findUnique({
     where: {
       userId_articleId: {
         userId,
@@ -39,7 +39,7 @@ export const findMany = async ({
   Prisma.ArticleWhereInput,
   Prisma.ArticleOrderByWithRelationInput
 >): Promise<FlattenedArticle[]> => {
-  const articles = await prisma.article.findMany({
+  const articles = await db.article.findMany({
     where,
     select: ARTICLE_SELECT,
     orderBy,
@@ -55,13 +55,13 @@ export const count = ({
 }: {
   where: Prisma.ArticleWhereInput;
 }): Promise<number> => {
-  return prisma.article.count({ where });
+  return db.article.count({ where });
 };
 
 export const create = async (
   input: CreateArticleInput,
 ): Promise<ArticleWithLike> => {
-  const article = await prisma.article.create({
+  const article = await db.article.create({
     data: input,
     select: ARTICLE_SELECT,
   });
@@ -79,7 +79,7 @@ export const findById = async (
 ): Promise<ArticleWithLike> => {
   const { userId, includeLike = false } = options;
 
-  const article = await prisma.article.findUniqueOrThrow({
+  const article = await db.article.findUniqueOrThrow({
     where: { id },
     select: ARTICLE_SELECT,
   });
@@ -101,7 +101,7 @@ export const update = async (
   data: UpdateArticleInput,
   userId: number,
 ): Promise<ArticleWithLike> => {
-  const article = await prisma.article.update({
+  const article = await db.article.update({
     where: { id },
     data,
     select: ARTICLE_SELECT,
@@ -116,5 +116,5 @@ export const update = async (
 };
 
 export const remove = (id: number) => {
-  return prisma.article.delete({ where: { id } });
+  return db.article.delete({ where: { id } });
 };
