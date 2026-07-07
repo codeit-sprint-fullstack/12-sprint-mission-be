@@ -8,17 +8,7 @@ import * as authRepository from "./auth.repository.js";
 import { validateSignup, validateLogin } from "./auth.validation.js";
 import { AppError } from "../../types/error.js";
 import type { RefreshTokenPayload } from "../../types/jwt.js";
-
-type SignupInput = {
-  email: string;
-  nickname: string;
-  password: string;
-};
-
-type LoginInput = {
-  email: string;
-  password: string;
-};
+import type { SignupInput, LoginInput } from "./auth.types.js";
 
 export const signup = async ({ email, nickname, password }: SignupInput) => {
   validateSignup({ email, nickname, password });

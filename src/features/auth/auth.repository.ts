@@ -1,13 +1,7 @@
 import prisma from "../../lib/prisma.js";
 import type { User } from "@prisma/client";
-
-type CreateUserInput = {
-  email: string;
-  nickname: string;
-  encryptedPassword: string;
-};
-
-type PublicUser = Pick<User, "id" | "email" | "nickname">;
+import type { PublicUser } from "../../types/user.js";
+import type { CreateUserInput } from "./auth.types.js";
 
 export const createUser = (user: CreateUserInput): Promise<PublicUser> => {
   return prisma.user.create({
