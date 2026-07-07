@@ -1,11 +1,7 @@
 import { RequestHandler } from "express";
-import type { JwtPayload } from "jsonwebtoken";
+import type { AccessTokenPayload } from "../types/jwt.js";
 import { verifyAccessToken } from "../lib/jwt.js";
 import { AppError } from "../types/error.js";
-
-type AccessTokenPayload = JwtPayload & {
-  userId: number;
-};
 
 export const requireAuth: RequestHandler = (req, res, next) => {
   const token = req.cookies.accessToken;
