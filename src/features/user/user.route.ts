@@ -5,7 +5,7 @@ import * as userController from "./user.controller.js";
 
 const router = express.Router();
 
-router.use(setResource("유저"));
+router.use(setResource("사용자"));
 
 router.get("/me", requireAuth, userController.getMe);
 
