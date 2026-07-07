@@ -7,12 +7,12 @@ export const getProducts = asyncHandler(async (req, res) => {
     pageSize = 10,
     orderBy = "recent",
     keyword = "",
-  } = req.query;
+  } = req.query as Record<string, string>;
 
   const result = await productService.getProducts({
-    page,
-    pageSize,
-    orderBy,
+    page: Number(page),
+    pageSize: Number(pageSize),
+    orderBy: orderBy as "recent" | "favorite",
     keyword,
   });
 
@@ -20,23 +20,26 @@ export const getProducts = asyncHandler(async (req, res) => {
 });
 
 export const getProduct = asyncHandler(async (req, res) => {
-  const product = await productService.getProduct(req.params.id, req.user?.id);
+  const product = await productService.getProduct(
+    Number(req.params.id),
+    req.user?.id,
+  );
   res.json({ data: product });
 });
 
 export const createProduct = asyncHandler(async (req, res) => {
   const { name, description, price, tags } = req.body;
 
-  const imageUrls = (req.files ?? []).map(
-    (file) => `/uploads/${file.filename}`,
-  );
+  const files = (req.files as Express.Multer.File[] | undefined) ?? [];
+
+  const imageUrls = files.map((file) => `/uploads/${file.filename}`);
 
   const product = await productService.createProduct({
     name,
     description,
     price: Number(price),
     tags: tags ? JSON.parse(tags) : [],
-    authorId: req.user.id,
+    authorId: req.user!.id,
     imageUrls,
   });
 
@@ -46,10 +49,11 @@ export const createProduct = asyncHandler(async (req, res) => {
 export const updateProduct = asyncHandler(async (req, res) => {
   const { name, description, price, tags, existingImageUrls } = req.body;
 
-  const keepImageUrls = existingImageUrls ? JSON.parse(existingImageUrls) : [];
-  const newImageUrls = (req.files ?? []).map(
-    (file) => `/uploads/${file.filename}`,
-  );
+  const keepImageUrls: string[] = existingImageUrls
+    ? JSON.parse(existingImageUrls)
+    : [];
+  const files = (req.files as Express.Multer.File[] | undefined) ?? [];
+  const newImageUrls = files.map((file) => `/uploads/${file.filename}`);
 
   const fields = {
     ...(name !== undefined && { name }),
@@ -60,14 +64,14 @@ export const updateProduct = asyncHandler(async (req, res) => {
   };
 
   const updated = await productService.updateProduct(
-    req.params.id,
+    Number(req.params.id),
     fields,
-    req.user.id,
+    req.user!.id,
   );
   res.json({ data: updated });
 });
 
 export const deleteProduct = asyncHandler(async (req, res) => {
-  await productService.deleteProduct(req.params.id, req.user.id);
+  await productService.deleteProduct(Number(req.params.id), req.user!.id);
   res.status(204).send();
 });

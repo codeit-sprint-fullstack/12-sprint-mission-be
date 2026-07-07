@@ -6,10 +6,9 @@ import upload from "../../middleware/upload.middleware.js";
 import * as productController from "./product.controller.js";
 import * as commentController from "../comment/comment.controller.js";
 import * as favoriteController from "../favorite/favorite.controller.js";
+import { MAX_IMAGE_COUNT } from "../../constants/image.constants.js";
 
 const router = express.Router();
-
-const MAX_IMAGE_COUNT = 3;
 
 router.use(setResource("상품"));
 
