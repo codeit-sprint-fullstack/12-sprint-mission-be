@@ -1,22 +1,19 @@
 import db from "../../lib/prisma.js";
-import { flattenAuthor } from "../../utils/flattenAuthor.js";
+import { flattenAuthor } from "../../utils/flatten-author.js";
+import {
+  COMMENT_SELECT,
+  type FlattenedComment,
+  type CreateCommentInput,
+  type UpdateCommentInput,
+  type GetCommentsParams,
+} from "./comment.types.js";
 
-const COMMENT_SELECT = {
-  id: true,
-  content: true,
-  articleId: true,
-  productId: true,
-  authorId: true,
-  author: {
-    select: {
-      nickname: true,
-    },
-  },
-  createdAt: true,
-  updatedAt: true,
-};
-
-export const findMany = async ({ articleId, productId, cursor, take }) => {
+export const findMany = async ({
+  articleId,
+  productId,
+  cursor,
+  take,
+}: GetCommentsParams): Promise<FlattenedComment[]> => {
   const comments = await db.comment.findMany({
     where: {
       articleId: articleId ?? undefined,
@@ -36,21 +33,18 @@ export const findMany = async ({ articleId, productId, cursor, take }) => {
   return comments.map(flattenAuthor);
 };
 
-export const create = async ({ content, articleId, productId, authorId }) => {
+export const create = async (
+  input: CreateCommentInput,
+): Promise<FlattenedComment> => {
   const comment = await db.comment.create({
-    data: {
-      content,
-      articleId,
-      productId,
-      authorId,
-    },
+    data: input,
     select: COMMENT_SELECT,
   });
 
   return flattenAuthor(comment);
 };
 
-export const findById = async (id) => {
+export const findById = async (id: number): Promise<FlattenedComment> => {
   const comment = await db.comment.findUniqueOrThrow({
     where: { id },
     select: COMMENT_SELECT,
@@ -59,7 +53,10 @@ export const findById = async (id) => {
   return flattenAuthor(comment);
 };
 
-export const update = async (id, data) => {
+export const update = async (
+  id: number,
+  data: UpdateCommentInput,
+): Promise<FlattenedComment> => {
   const comment = await db.comment.update({
     where: { id },
     data,
@@ -69,7 +66,7 @@ export const update = async (id, data) => {
   return flattenAuthor(comment);
 };
 
-export const remove = (id) => {
+export const remove = (id: number) => {
   return db.comment.delete({
     where: { id },
   });

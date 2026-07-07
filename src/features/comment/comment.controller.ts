@@ -2,7 +2,7 @@ import asyncHandler from "../../middleware/async-handler.middleware.js";
 import * as commentService from "./comment.service.js";
 
 export const getComments = asyncHandler(async (req, res) => {
-  const { cursor, take = 10 } = req.query;
+  const { cursor, take = "10" } = req.query as Record<string, string>;
   const { id } = req.params;
 
   const isArticle = req.baseUrl.includes("articles");
@@ -27,7 +27,7 @@ export const createComment = asyncHandler(async (req, res) => {
     content,
     articleId: isArticle ? Number(id) : null,
     productId: !isArticle ? Number(id) : null,
-    authorId: req.user.id,
+    authorId: req.user!.id,
   });
 
   res.status(201).json({ data: comment });
@@ -35,14 +35,14 @@ export const createComment = asyncHandler(async (req, res) => {
 
 export const updateComment = asyncHandler(async (req, res) => {
   const comment = await commentService.updateComment(
-    req.params.id,
+    Number(req.params.id),
     req.body,
-    req.user.id,
+    req.user!.id,
   );
   res.json({ data: comment });
 });
 
 export const deleteComment = asyncHandler(async (req, res) => {
-  await commentService.deleteComment(req.params.id, req.user.id);
+  await commentService.deleteComment(Number(req.params.id), req.user!.id);
   res.status(204).send();
 });

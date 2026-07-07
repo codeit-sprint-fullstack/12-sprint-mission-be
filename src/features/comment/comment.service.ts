@@ -4,8 +4,18 @@ import {
   validateCommentContent,
   validateCommentTarget,
 } from "./comment.validate.js";
+import type {
+  CreateCommentInput,
+  UpdateCommentInput,
+  GetCommentsParams,
+} from "./comment.types.js";
 
-export const getComments = async ({ articleId, productId, cursor, take }) => {
+export const getComments = async ({
+  articleId,
+  productId,
+  cursor,
+  take,
+}: GetCommentsParams) => {
   const comments = await commentRepository.findMany({
     articleId,
     productId,
@@ -27,44 +37,20 @@ export const getComments = async ({ articleId, productId, cursor, take }) => {
   };
 };
 
-export const findMany = ({ articleId, productId, cursor, take }) => {
-  const comments = prisma.comment.findMany({
-    where: {
-      articleId: articleId ?? undefined,
-      productId: productId ?? undefined,
-    },
-    select: COMMENT_SELECT,
-    orderBy: {
-      id: "desc",
-    },
-    take,
-    ...(cursor && {
-      cursor: { id: cursor },
-      skip: 1,
-    }),
-  });
+export const createComment = async (input: CreateCommentInput) => {
+  const { content, articleId, productId } = input;
 
-  return comments.map(flattenAuthor);
-};
-
-export const createComment = async ({
-  content,
-  articleId,
-  productId,
-  authorId,
-}) => {
   validateCommentContent({ content });
   validateCommentTarget({ articleId, productId });
 
-  return commentRepository.create({
-    content,
-    articleId,
-    productId,
-    authorId,
-  });
+  return commentRepository.create(input);
 };
 
-export const updateComment = async (id, content, userId) => {
+export const updateComment = async (
+  id: number,
+  content: UpdateCommentInput,
+  userId: number,
+) => {
   validateCommentContent(content);
 
   const comment = await commentRepository.findById(id);
@@ -73,7 +59,7 @@ export const updateComment = async (id, content, userId) => {
   return commentRepository.update(id, content);
 };
 
-export const deleteComment = async (id, userId) => {
+export const deleteComment = async (id: number, userId: number) => {
   const comment = await commentRepository.findById(id);
   validateAuthor(comment, userId);
 
