@@ -11,9 +11,7 @@
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "declaration": true,
-    "sourceMap": true,
-    // 마이그레이션 중 임시 허용
-    "allowJs": true
+    "sourceMap": true
   },
   "include": ["src/**/*.ts", "src/types/**/*.ts", "src/types/**/*.d.ts"],
   "exclude": ["node_modules", "dist"]
