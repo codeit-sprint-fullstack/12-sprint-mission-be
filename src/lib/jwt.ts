@@ -2,7 +2,7 @@ import jwt, { type JwtPayload } from "jsonwebtoken";
 import {
   ACCESS_TOKEN_EXPIRES_IN,
   REFRESH_TOKEN_EXPIRES_IN,
-} from "./constants.js";
+} from "../constants/token.constants.js";
 
 if (!process.env.ACCESS_TOKEN_SECRET) {
   throw new Error("ACCESS_TOKEN_SECRET이 설정되지 않았습니다");
