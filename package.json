@@ -38,9 +38,7 @@
     "@types/jsonwebtoken": "^9.0.10",
     "@types/multer": "^2.2.0",
     "@types/node": "^26.1.0",
-    "install": "^0.13.0",
     "nodemon": "^3.1.14",
-    "npm": "^11.12.1",
     "prisma": "^6.19.3",
     "tsx": "^4.23.0",
     "typescript": "^6.0.3"
