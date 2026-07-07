@@ -3,12 +3,15 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import path from "path";
+import swaggerUi from "swagger-ui-express";
+import { swaggerSpec } from "./config/swagger.js";
+
 import authRouter from "./features/auth/auth.route.js";
 import productsRouter from "./features/product/product.route.js";
 import articlesRouter from "./features/article/article.route.js";
 import commentsRouter from "./features/comment/comment.route.js";
 import usersRouter from "./features/user/user.route.js";
-import path from "path";
 
 import errorHandler from "./middleware/error-handler.middleware.js";
 
@@ -24,6 +27,8 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use("/auth", authRouter);
 app.use("/products", productsRouter);
