@@ -1,18 +1,21 @@
-import prisma from "../lib/prisma.js";
+import { User } from "@prisma/client";
+import prisma from "../lib/prisma";
 
-const findByEmail = async (email) => {
+const findByEmail = async (email: User["email"]) => {
   return await prisma.user.findUnique({
     where: { email },
   });
 };
 
-const findById = async (id) => {
+const findById = async (id: User["id"]) => {
   return await prisma.user.findUnique({
     where: { id },
   });
 };
 
-const createUser = async (userData) => {
+const createUser = async (
+  userData: Pick<User, "email" | "encryptedPassword" | "nickname">,
+) => {
   return await prisma.user.create({
     data: userData,
     select: {
@@ -24,7 +27,10 @@ const createUser = async (userData) => {
   });
 };
 
-const updateUser = async (id, data) => {
+const updateUser = async (
+  id: User["id"],
+  data: Partial<User>,
+): Promise<User> => {
   return await prisma.user.update({
     where: {
       id,

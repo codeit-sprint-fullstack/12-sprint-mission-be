@@ -8,6 +8,7 @@
     "accepts": "^2.0.0",
     "anymatch": "^3.1.3",
     "balanced-match": "^4.0.4",
+    "bcrypt": "^6.0.0",
     "binary-extensions": "^2.3.0",
     "body-parser": "^2.2.2",
     "brace-expansion": "^5.0.5",
@@ -19,6 +20,7 @@
     "content-disposition": "^1.0.1",
     "content-type": "^1.0.5",
     "cookie": "^0.7.2",
+    "cookie-parser": "^1.4.7",
     "cookie-signature": "^1.2.2",
     "cors": "^2.8.6",
     "debug": "^4.4.3",
@@ -32,6 +34,7 @@
     "escape-html": "^1.0.3",
     "etag": "^1.8.1",
     "express": "^5.2.1",
+    "express-jwt": "^8.5.1",
     "fill-range": "^7.1.1",
     "finalhandler": "^2.1.1",
     "forwarded": "^0.2.0",
@@ -54,6 +57,7 @@
     "is-glob": "^4.0.3",
     "is-number": "^7.0.0",
     "is-promise": "^4.0.0",
+    "jsonwebtoken": "^9.0.3",
     "math-intrinsics": "^1.1.0",
     "media-typer": "^1.1.0",
     "merge-descriptors": "^2.0.0",
@@ -97,17 +101,14 @@
     "unpipe": "^1.0.0",
     "vary": "^1.1.2",
     "wrappy": "^1.0.2",
-    "express-jwt": "^8.5.1",
-    "jsonwebtoken": "^9.0.3",
-    "zod": "^4.4.3",
-    "bcrypt": "^6.0.0",
-    "cookie-parser": "^1.4.7"
+    "zod": "^4.4.3"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node app.js",
-    "dev": "nodemon app.js",
-    "seed": "node prisma/seed/seed.js"
+    "seed": "node prisma/seed/seed.js",
+    "dev": "ts-node-dev --respawn app.ts",
+    "build": "tsc",
+    "start": "node --enable-source-maps dist/app.js"
   },
   "prisma": {
     "seed": "node prisma/seed/seed.js"
@@ -119,14 +120,22 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "module",
   "bugs": {
     "url": "https://github.com/gptjd0204/12-sprint-mission-be/issues"
   },
   "homepage": "https://github.com/gptjd0204/12-sprint-mission-be#readme",
   "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
+    "@types/cookie-parser": "^1.4.10",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/express-session": "^1.19.0",
+    "@types/jsonwebtoken": "^9.0.10",
     "dotenv": "^17.4.1",
     "nodemon": "^3.1.14",
-    "prisma": "^6.19.3"
+    "prisma": "^6.19.3",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^6.0.3"
   }
 }

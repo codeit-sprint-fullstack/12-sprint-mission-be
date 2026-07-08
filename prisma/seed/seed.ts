@@ -3,7 +3,7 @@ import {
   articlesSeedData,
   commentsSeedData,
   productSeedData,
-} from "./seedData.js";
+} from "./seedData";
 
 const prisma = new PrismaClient();
 
