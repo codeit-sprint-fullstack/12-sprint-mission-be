@@ -20,9 +20,16 @@ model Product {
   price         Float
   tags          String[]  @default([])
   favoriteCount Int      @default(0) @map("favorite_count")
-  comments      Comment[]
+  imageUrls     String[]  @default([]) @map("image_urls")
+
+  authorId Int    @map("author_id")
+  author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
   createdAt     DateTime @default(now()) @map("created_at")
   updatedAt     DateTime @updatedAt @map("updated_at")
+
+  comments      Comment[]
+  likes         ProductLike[]
 
   @@map("products")
 }
@@ -32,9 +39,16 @@ model Article {
   title         String
   content       String
   favoriteCount Int      @default(0) @map("favorite_count")
-  comments      Comment[]
+  imageUrls     String[]  @default([]) @map("image_urls")
+
+  authorId Int    @map("author_id")
+  author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
   createdAt     DateTime @default(now()) @map("created_at")
   updatedAt     DateTime @updatedAt @map("updated_at")
+
+  comments      Comment[]
+  likes         ArticleLike[]
 
   @@map("articles")
 }
@@ -44,10 +58,60 @@ model Comment {
   content   String
   articleId Int?     
   productId Int?     
+
   article   Article? @relation(fields: [articleId], references: [id], onDelete: Cascade)
   product   Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  authorId Int    @map("author_id")
+  author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("comments")
 }
+
+model User {
+  id                Int      @id @default(autoincrement())
+  email             String   @unique
+  nickname          String
+  image             String?
+  encryptedPassword String   @map("encrypted_password")
+  refreshToken      String?  @map("refresh_token")
+
+  products      Product[]
+  articles      Article[]
+  comments      Comment[]
+  productLikes  ProductLike[]
+  articleLikes  ArticleLike[]
+
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
+model ProductLike {
+  userId    Int @map("user_id")
+  productId Int @map("product_id")
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@id([userId, productId])
+
+  @@map("product_likes")
+}
+
+model ArticleLike {
+  userId    Int @map("user_id")
+  articleId Int @map("article_id")
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  article Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
+
+  @@id([userId, articleId])
+
+  @@map("article_likes")
+}
+
